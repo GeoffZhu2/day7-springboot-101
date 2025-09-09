@@ -52,10 +52,10 @@ public class EmployeeController {
                 findEmployee.setAge(employee.getAge());
                 findEmployee.setGender(employee.getGender());
                 findEmployee.setSalary(employee.getSalary());
-                return ResponseEntity.ok(employee);
+                return ResponseEntity.ok(findEmployee);
             }
         }
-        return null;
+        return ResponseEntity.notFound().build();
     }
 
     public void clearEmployees() {

@@ -10,8 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -147,5 +146,41 @@ class SpringbootDemoApplicationTests {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    void should_update_employee_by_id_when_put_given_a_valid_update_body() throws Exception {
+        String createRequestBody = """
+                {
+                    "name": "John Smith",
+                    "age": 35,
+                    "gender": "Male",
+                    "salary": 15000
+                }
+                """;
+        String updateRequestBody = """
+                {
+                    "name": "Tom Cat",
+                    "age": 40,
+                    "gender": "Female",
+                    "salary": 18000
+                }
+                """;
+        mockMvc.perform(post("/employees")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(createRequestBody))
+                .andReturn();
 
+        mockMvc.perform(put("/employees/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateRequestBody))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("Tom Cat"))
+                .andExpect(jsonPath("$.age").value(40))
+                .andExpect(jsonPath("$.gender").value("Female"))
+                .andExpect(jsonPath("$.salary").value(18000));
+        mockMvc.perform(put("/employees/999")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateRequestBody))
+                .andExpect(status().isNotFound());
+    }
 }
