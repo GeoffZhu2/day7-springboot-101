@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/employees")
@@ -28,14 +29,19 @@ public class EmployeeController {
         return employee.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-    @GetMapping("?gender=Male")
-    public ResponseEntity<Employee> queryEmployeeByGender(@RequestParam String gender) {
-        for (Employee employee : employees) {
-            if(employee.getGender().equals(gender)) {
-                return ResponseEntity.ok(employee);
+    @GetMapping
+    public ResponseEntity<List<Employee>> queryEmployeeByGender(@RequestParam String gender) {
+        if(gender != null) {
+            List<Employee> filteredEmployees = employees.stream()
+                    .filter(employee -> employee.getGender().equalsIgnoreCase(gender))
+                    .collect(Collectors.toList());
+
+            if (filteredEmployees.isEmpty()) {
+                return ResponseEntity.notFound().build();
             }
+            return ResponseEntity.ok(filteredEmployees);
         }
-        return null;
+        return ResponseEntity.ok(employees);
     }
 
     @PutMapping("/{id}")
@@ -50,5 +56,9 @@ public class EmployeeController {
             }
         }
         return null;
+    }
+
+    public void clearEmployees() {
+        employees.clear();
     }
 }
