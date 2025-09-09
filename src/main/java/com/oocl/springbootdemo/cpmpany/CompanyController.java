@@ -21,15 +21,16 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.CREATED).body(company);
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Company> queryCompanyById(@PathVariable int id) {
-//        Optional<Company> company = companies.stream()
-//                .filter(e -> e.getId() == id)
-//                .findFirst();
-//
-//        return company.map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
-//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<Company> queryCompanyById(@PathVariable int id) {
+        Optional<Company> company = companies.stream()
+                .filter(e -> e.getId() == id)
+                .findFirst();
+
+        return company.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 //    @GetMapping
 //    public ResponseEntity<Map<String, Object>> getCompanies(
 //            @RequestParam(defaultValue = "1") int page,

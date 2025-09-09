@@ -43,29 +43,30 @@ class CompanyControllerTests {
                 .andExpect(jsonPath("$.name").value("Java"));
     }
 
-//    @Test
-//    void should_get_company_by_valid_id_when_get_given_a_valid_body() throws Exception {
-//        String requestBody = """
-//                {
-//                    "name": "Java"
-//                }
-//                """;
-//        mockMvc.perform(post("/companies")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(requestBody))
-//                .andReturn();
-//
-//        mockMvc.perform(get("/companies/1"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id").value(1))
-//                .andExpect(jsonPath("$.name").value("Java"));
-//    }
-//    @Test
-//    void should_get_404_by_invalid_id_when_get_given_none() throws Exception {
-//        // 测试不存在的 ID
-//        mockMvc.perform(get("/companies/999"))
-//                .andExpect(status().isNotFound());
-//    }
+    @Test
+    void should_get_company_by_valid_id_when_get_given_a_valid_body() throws Exception {
+        String requestBody = """
+                {
+                    "name": "Java"
+                }
+                """;
+        mockMvc.perform(post("/companies")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andReturn();
+
+        mockMvc.perform(get("/companies/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("Java"));
+    }
+    @Test
+    void should_get_404_by_invalid_id_when_get_given_none() throws Exception {
+        // 测试不存在的 ID
+        mockMvc.perform(get("/companies/999"))
+                .andExpect(status().isNotFound());
+    }
+
 //    @Test
 //    void should_get_company_by_gender_when_get_given_2_valid_bodies() throws Exception {
 //        String requestBody1 = """
