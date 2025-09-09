@@ -111,20 +111,34 @@ class SpringbootDemoApplicationTests {
 
         mockMvc.perform(get("/employees?gender=Male"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].name").value("John Smith"))
-                .andExpect(jsonPath("$[0].age").value(35))
-                .andExpect(jsonPath("$[0].gender").value("Male"))
-                .andExpect(jsonPath("$[0].salary").value(15000));
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].id").value(1))
+                .andExpect(jsonPath("$.content[0].name").value("John Smith"))
+                .andExpect(jsonPath("$.content[0].age").value(35))
+                .andExpect(jsonPath("$.content[0].gender").value("Male"))
+                .andExpect(jsonPath("$.content[0].salary").value(15000))
+                .andExpect(jsonPath("$.totalItems").value(1))
+                .andExpect(jsonPath("$.totalPages").value(1))
+                .andExpect(jsonPath("$.currentPage").value(1))
+                .andExpect(jsonPath("$.pageSize").value(5));
+
         mockMvc.perform(get("/employees"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].name").value("John Smith"))
-                .andExpect(jsonPath("$[0].age").value(35))
-                .andExpect(jsonPath("$[0].gender").value("Male"))
-                .andExpect(jsonPath("$[0].salary").value(15000));
+                .andExpect(jsonPath("$.content", hasSize(2)))
+                .andExpect(jsonPath("$.content[0].id").value(1))
+                .andExpect(jsonPath("$.content[0].name").value("John Smith"))
+                .andExpect(jsonPath("$.content[0].age").value(35))
+                .andExpect(jsonPath("$.content[0].gender").value("Male"))
+                .andExpect(jsonPath("$.content[0].salary").value(15000))
+                .andExpect(jsonPath("$.content[1].id").value(2))
+                .andExpect(jsonPath("$.content[1].name").value("Tom Cat"))
+                .andExpect(jsonPath("$.content[1].age").value(40))
+                .andExpect(jsonPath("$.content[1].gender").value("Female"))
+                .andExpect(jsonPath("$.content[1].salary").value(18000))
+                .andExpect(jsonPath("$.totalItems").value(2))
+                .andExpect(jsonPath("$.totalPages").value(1))
+                .andExpect(jsonPath("$.currentPage").value(1))
+                .andExpect(jsonPath("$.pageSize").value(5));
     }
 
     @Test
@@ -143,7 +157,12 @@ class SpringbootDemoApplicationTests {
                 .andReturn();
 
         mockMvc.perform(get("/employees?gender=Female"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(0)))
+                .andExpect(jsonPath("$.totalItems").value(0))
+                .andExpect(jsonPath("$.totalPages").value(0))
+                .andExpect(jsonPath("$.currentPage").value(1))
+                .andExpect(jsonPath("$.pageSize").value(5));
     }
 
     @Test
@@ -204,5 +223,48 @@ class SpringbootDemoApplicationTests {
         mockMvc.perform(delete("/employees/1"))
                 .andExpect(status().isOk())
                 .andReturn();
+    }
+
+    @Test
+    void should_get_employees_with_pagination_when_get_given_10_valid_bodies() throws Exception {
+        for (int i = 1; i <= 10; i++) {
+            String requestBody = String.format("""
+            {
+                "name": "Employee %d",
+                "age": %d,
+                "gender": "Male",
+                "salary": %d
+            }
+            """, i, 20 + i, 10000 + i * 1000);
+
+            mockMvc.perform(post("/employees")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestBody))
+                    .andReturn();
+        }
+        mockMvc.perform(get("/employees?page=1&size=5"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(5)))
+                .andExpect(jsonPath("$.totalPages").value(2))
+                .andExpect(jsonPath("$.totalItems").value(10))
+                .andExpect(jsonPath("$.currentPage").value(1))
+                .andExpect(jsonPath("$.pageSize").value(5))
+                .andExpect(jsonPath("$.content[0].name").value("Employee 1"));
+        mockMvc.perform(get("/employees?page=2&size=5"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(5)))
+                .andExpect(jsonPath("$.totalPages").value(2))
+                .andExpect(jsonPath("$.totalItems").value(10))
+                .andExpect(jsonPath("$.currentPage").value(2))
+                .andExpect(jsonPath("$.pageSize").value(5))
+                .andExpect(jsonPath("$.content[0].name").value("Employee 6"));
+        mockMvc.perform(get("/employees?gender=Male&page=1&size=3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(3)))
+                .andExpect(jsonPath("$.totalItems").value(10));
+        mockMvc.perform(get("/employees"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPage").value(1))
+                .andExpect(jsonPath("$.pageSize").value(5));
     }
 }

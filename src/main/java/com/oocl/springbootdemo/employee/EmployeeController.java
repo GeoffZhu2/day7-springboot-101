@@ -30,18 +30,31 @@ public class EmployeeController {
                 .orElse(ResponseEntity.notFound().build());
     }
     @GetMapping
-    public ResponseEntity<List<Employee>> queryEmployeeByGender(@RequestParam(required = false) String gender) {
-        if(gender != null) {
-            List<Employee> filteredEmployees = employees.stream()
+    public ResponseEntity<Map<String, Object>> getEmployees(
+            @RequestParam(required = false) String gender,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        List<Employee> filteredEmployees = employees;
+        if (gender != null) {
+            filteredEmployees = employees.stream()
                     .filter(employee -> employee.getGender().equalsIgnoreCase(gender))
                     .collect(Collectors.toList());
-
-            if (filteredEmployees.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.ok(filteredEmployees);
         }
-        return ResponseEntity.ok(employees);
+        int totalItems = filteredEmployees.size();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        int fromIndex = (page - 1) * size;
+        int toIndex = Math.min(fromIndex + size, totalItems);
+
+        List<Employee> pagedEmployees = filteredEmployees.subList(fromIndex, toIndex);
+
+        return ResponseEntity.ok(Map.of(
+                "content", pagedEmployees,
+                "totalPages", totalPages,
+                "totalItems", totalItems,
+                "currentPage", page,
+                "pageSize", size
+        ));
     }
 
     @PutMapping("/{id}")
