@@ -67,126 +67,35 @@ class CompanyControllerTests {
                 .andExpect(status().isNotFound());
     }
 
-//    @Test
-//    void should_get_company_by_gender_when_get_given_2_valid_bodies() throws Exception {
-//        String requestBody1 = """
-//                {
-//                    "name": "John Smith",
-//                    "age": 35,
-//                    "gender": "Male",
-//                    "salary": 15000
-//                }
-//                """;
-//        String requestBody2 = """
-//                {
-//                    "name": "Tom Cat",
-//                    "age": 40,
-//                    "gender": "Female",
-//                    "salary": 18000
-//                }
-//                """;
-//        mockMvc.perform(post("/companies")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(requestBody1))
-//                .andReturn();
-//        mockMvc.perform(post("/companies")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(requestBody2))
-//                .andReturn();
-//
-//        mockMvc.perform(get("/companies?gender=Male"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.content", hasSize(1)))
-//                .andExpect(jsonPath("$.content[0].id").value(1))
-//                .andExpect(jsonPath("$.content[0].name").value("John Smith"))
-//                .andExpect(jsonPath("$.content[0].age").value(35))
-//                .andExpect(jsonPath("$.content[0].gender").value("Male"))
-//                .andExpect(jsonPath("$.content[0].salary").value(15000))
-//                .andExpect(jsonPath("$.totalItems").value(1))
-//                .andExpect(jsonPath("$.totalPages").value(1))
-//                .andExpect(jsonPath("$.currentPage").value(1))
-//                .andExpect(jsonPath("$.pageSize").value(5));
-//
-//        mockMvc.perform(get("/companies"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.content", hasSize(2)))
-//                .andExpect(jsonPath("$.content[0].id").value(1))
-//                .andExpect(jsonPath("$.content[0].name").value("John Smith"))
-//                .andExpect(jsonPath("$.content[0].age").value(35))
-//                .andExpect(jsonPath("$.content[0].gender").value("Male"))
-//                .andExpect(jsonPath("$.content[0].salary").value(15000))
-//                .andExpect(jsonPath("$.content[1].id").value(2))
-//                .andExpect(jsonPath("$.content[1].name").value("Tom Cat"))
-//                .andExpect(jsonPath("$.content[1].age").value(40))
-//                .andExpect(jsonPath("$.content[1].gender").value("Female"))
-//                .andExpect(jsonPath("$.content[1].salary").value(18000))
-//                .andExpect(jsonPath("$.totalItems").value(2))
-//                .andExpect(jsonPath("$.totalPages").value(1))
-//                .andExpect(jsonPath("$.currentPage").value(1))
-//                .andExpect(jsonPath("$.pageSize").value(5));
-//    }
-//
-//    @Test
-//    void should_get_company_by_gender_when_get_given_a_valid_body() throws Exception {
-//        String requestBody1 = """
-//                {
-//                    "name": "John Smith",
-//                    "age": 35,
-//                    "gender": "Male",
-//                    "salary": 15000
-//                }
-//                """;
-//        mockMvc.perform(post("/companies")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(requestBody1))
-//                .andReturn();
-//
-//        mockMvc.perform(get("/companies?gender=Female"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.content", hasSize(0)))
-//                .andExpect(jsonPath("$.totalItems").value(0))
-//                .andExpect(jsonPath("$.totalPages").value(0))
-//                .andExpect(jsonPath("$.currentPage").value(1))
-//                .andExpect(jsonPath("$.pageSize").value(5));
-//    }
-//
-//    @Test
-//    void should_update_company_by_id_when_put_given_a_valid_update_body() throws Exception {
-//        String createRequestBody = """
-//                {
-//                    "name": "John Smith",
-//                    "age": 35,
-//                    "gender": "Male",
-//                    "salary": 15000
-//                }
-//                """;
-//        String updateRequestBody = """
-//                {
-//                    "name": "Tom Cat",
-//                    "age": 40,
-//                    "gender": "Female",
-//                    "salary": 18000
-//                }
-//                """;
-//        mockMvc.perform(post("/companies")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(createRequestBody))
-//                .andReturn();
-//
-//        mockMvc.perform(put("/companies/1")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(updateRequestBody))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id").value(1))
-//                .andExpect(jsonPath("$.name").value("Tom Cat"))
-//                .andExpect(jsonPath("$.age").value(40))
-//                .andExpect(jsonPath("$.gender").value("Female"))
-//                .andExpect(jsonPath("$.salary").value(18000));
-//        mockMvc.perform(put("/companies/999")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(updateRequestBody))
-//                .andExpect(status().isNotFound());
-//    }
+    @Test
+    void should_update_company_by_id_when_put_given_a_valid_update_body() throws Exception {
+        String createRequestBody = """
+                {
+                    "name": "Java"
+                }
+                """;
+        String updateRequestBody = """
+                {
+                    "name": "C++"
+                }
+                """;
+        mockMvc.perform(post("/companies")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(createRequestBody))
+                .andReturn();
+
+        mockMvc.perform(put("/companies/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateRequestBody))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("C++"));
+        mockMvc.perform(put("/companies/999")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateRequestBody))
+                .andExpect(status().isNotFound());
+    }
+
 //    @Test
 //    void should_delete_company_by_id_when_delete_given_a_valid_body() throws Exception {
 //        String requestBody1 = """

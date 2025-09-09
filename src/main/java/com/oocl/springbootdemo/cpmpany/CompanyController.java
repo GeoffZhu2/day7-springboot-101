@@ -53,16 +53,16 @@ public class CompanyController {
 //        ));
 //    }
 //
-//    @PutMapping("/{id}")
-//    public ResponseEntity<Company> updateCompanyById(@RequestBody Company company, @PathVariable int id) {
-//        for (Company findCompany : companies) {
-//            if(findCompany.getId() == id) {
-//                findCompany.setName(company.getName());
-//                return ResponseEntity.ok(findCompany);
-//            }
-//        }
-//        return ResponseEntity.notFound().build();
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Company> updateCompanyById(@RequestBody Company company, @PathVariable int id) {
+        for (Company findCompany : companies) {
+            if(findCompany.getId() == id) {
+                findCompany.setName(company.getName());
+                return ResponseEntity.ok(findCompany);
+            }
+        }
+        return ResponseEntity.notFound().build();
+    }
 //    @DeleteMapping("/{id}")
 //    public ResponseEntity<Company> deleteCompanyById(@PathVariable int id) {
 //        for (Company findCompany : companies) {
