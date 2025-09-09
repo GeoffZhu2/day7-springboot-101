@@ -1,6 +1,5 @@
-package com.oocl.springbootdemo;
+package com.oocl.springbootdemo.employee;
 
-import com.oocl.springbootdemo.employee.EmployeeController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class SpringbootDemoApplicationTests {
+class EmployeeControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
