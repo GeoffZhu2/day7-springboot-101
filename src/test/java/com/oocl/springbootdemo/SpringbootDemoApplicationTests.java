@@ -183,4 +183,26 @@ class SpringbootDemoApplicationTests {
                         .content(updateRequestBody))
                 .andExpect(status().isNotFound());
     }
+    @Test
+    void should_delete_employee_by_id_when_delete_given_a_valid_body() throws Exception {
+        String requestBody1 = """
+                {
+                    "name": "John Smith",
+                    "age": 35,
+                    "gender": "Male",
+                    "salary": 15000
+                }
+                """;
+        mockMvc.perform(post("/employees")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody1))
+                .andReturn();
+
+        mockMvc.perform(delete("/employees/2"))
+                .andExpect(status().isNoContent())
+                .andReturn();
+        mockMvc.perform(delete("/employees/1"))
+                .andExpect(status().isOk())
+                .andReturn();
+    }
 }
