@@ -38,6 +38,21 @@ class SpringbootDemoApplicationTests {
                 .andExpect(jsonPath("$.age").value(35))
                 .andExpect(jsonPath("$.gender").value("Male"))
                 .andExpect(jsonPath("$.salary").value(15000));
+    }
+
+    @Test
+    void should_get_employee_by_id_when_get_given_a_valid_body() throws Exception {
+        String requestBody = """
+                {
+                    "name": "John Smith",
+                    "age": 35,
+                    "gender": "Male",
+                    "salary": 15000
+                }
+                """;
+        mockMvc.perform(post("/employees").contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andReturn();
 
         mockMvc.perform(get("/employees/1", 1)
                         .contentType(MediaType.APPLICATION_JSON).content(requestBody))
