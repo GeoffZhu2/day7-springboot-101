@@ -41,7 +41,7 @@ class SpringbootDemoApplicationTests {
     }
 
     @Test
-    void should_get_employee_by_id_when_get_given_a_valid_body() throws Exception {
+    void should_get_employee_by_valid_id_when_get_given_a_valid_body() throws Exception {
         String requestBody = """
                 {
                     "name": "John Smith",
@@ -50,12 +50,12 @@ class SpringbootDemoApplicationTests {
                     "salary": 15000
                 }
                 """;
-        mockMvc.perform(post("/employees").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/employees")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andReturn();
 
-        mockMvc.perform(get("/employees/1", 1)
-                        .contentType(MediaType.APPLICATION_JSON).content(requestBody))
+        mockMvc.perform(get("/employees/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("John Smith"))
@@ -63,5 +63,10 @@ class SpringbootDemoApplicationTests {
                 .andExpect(jsonPath("$.gender").value("Male"))
                 .andExpect(jsonPath("$.salary").value(15000));
     }
-
+    @Test
+    void should_get_employee_by_invalid_id_when_get_given_a_valid_body() throws Exception {
+        // 测试不存在的 ID
+        mockMvc.perform(get("/employees/999"))
+                .andExpect(status().isNotFound());
+    }
 }

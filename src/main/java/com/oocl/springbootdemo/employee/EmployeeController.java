@@ -4,10 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @RestController
 @RequestMapping("/employees")
@@ -24,12 +21,12 @@ public class EmployeeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Employee> queryEmployeeById(@PathVariable int id) {
-        for (Employee employee : employees) {
-            if(employee.getId() == id) {
-                return ResponseEntity.ok(employee);
-            }
-        }
-        return null;
+        Optional<Employee> employee = employees.stream()
+                .filter(e -> e.getId() == id)
+                .findFirst();
+
+        return employee.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
     @GetMapping("?gender=Male")
     public ResponseEntity<Employee> queryEmployeeByGender(@RequestParam String gender) {
