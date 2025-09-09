@@ -96,29 +96,26 @@ class CompanyControllerTests {
                 .andExpect(status().isNotFound());
     }
 
-//    @Test
-//    void should_delete_company_by_id_when_delete_given_a_valid_body() throws Exception {
-//        String requestBody1 = """
-//                {
-//                    "name": "John Smith",
-//                    "age": 35,
-//                    "gender": "Male",
-//                    "salary": 15000
-//                }
-//                """;
-//        mockMvc.perform(post("/companies")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(requestBody1))
-//                .andReturn();
-//
-//        mockMvc.perform(delete("/companies/2"))
-//                .andExpect(status().isNoContent())
-//                .andReturn();
-//        mockMvc.perform(delete("/companies/1"))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//    }
-//
+    @Test
+    void should_delete_company_by_id_when_delete_given_a_valid_body() throws Exception {
+        String requestBody1 = """
+                {
+                    "name": "Java"
+                }
+                """;
+        mockMvc.perform(post("/companies")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody1))
+                .andReturn();
+
+        mockMvc.perform(delete("/companies/2"))
+                .andExpect(status().isNoContent())
+                .andReturn();
+        mockMvc.perform(delete("/companies/1"))
+                .andExpect(status().isOk())
+                .andReturn();
+    }
+
 //    @Test
 //    void should_get_companies_with_pagination_when_get_given_10_valid_bodies() throws Exception {
 //        for (int i = 1; i <= 10; i++) {

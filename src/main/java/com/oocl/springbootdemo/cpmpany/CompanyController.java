@@ -63,16 +63,17 @@ public class CompanyController {
         }
         return ResponseEntity.notFound().build();
     }
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Company> deleteCompanyById(@PathVariable int id) {
-//        for (Company findCompany : companies) {
-//            if(findCompany.getId() == id) {
-//                companies.remove(findCompany);
-//                return ResponseEntity.ok().build();
-//            }
-//        }
-//        return ResponseEntity.noContent().build();
-//    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Company> deleteCompanyById(@PathVariable int id) {
+        for (Company findCompany : companies) {
+            if(findCompany.getId() == id) {
+                companies.remove(findCompany);
+                return ResponseEntity.ok().build();
+            }
+        }
+        return ResponseEntity.noContent().build();
+    }
 
     public void clearCompanies() {
         companies.clear();
