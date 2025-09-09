@@ -112,8 +112,16 @@ class SpringbootDemoApplicationTests {
 
         mockMvc.perform(get("/employees?gender=Male"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1))) // 验证数组大小
-                .andExpect(jsonPath("$[0].id").value(1)) // 使用 $[0] 访问第一个元素
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].name").value("John Smith"))
+                .andExpect(jsonPath("$[0].age").value(35))
+                .andExpect(jsonPath("$[0].gender").value("Male"))
+                .andExpect(jsonPath("$[0].salary").value(15000));
+        mockMvc.perform(get("/employees"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].name").value("John Smith"))
                 .andExpect(jsonPath("$[0].age").value(35))
                 .andExpect(jsonPath("$[0].gender").value("Male"))
@@ -138,4 +146,6 @@ class SpringbootDemoApplicationTests {
         mockMvc.perform(get("/employees?gender=Female"))
                 .andExpect(status().isNotFound());
     }
+
+
 }

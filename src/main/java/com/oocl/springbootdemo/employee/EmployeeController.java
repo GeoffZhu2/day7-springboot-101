@@ -30,7 +30,7 @@ public class EmployeeController {
                 .orElse(ResponseEntity.notFound().build());
     }
     @GetMapping
-    public ResponseEntity<List<Employee>> queryEmployeeByGender(@RequestParam String gender) {
+    public ResponseEntity<List<Employee>> queryEmployeeByGender(@RequestParam(required = false) String gender) {
         if(gender != null) {
             List<Employee> filteredEmployees = employees.stream()
                     .filter(employee -> employee.getGender().equalsIgnoreCase(gender))
