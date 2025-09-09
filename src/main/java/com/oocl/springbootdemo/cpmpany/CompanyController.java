@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -31,28 +32,28 @@ public class CompanyController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-//    @GetMapping
-//    public ResponseEntity<Map<String, Object>> getCompanies(
-//            @RequestParam(defaultValue = "1") int page,
-//            @RequestParam(defaultValue = "5") int size) {
-//        List<Company> filteredCompanies = companies;
-//        int totalItems = filteredCompanies.size();
-//        int totalPages = (int) Math.ceil((double) totalItems / size);
-//
-//        int fromIndex = (page - 1) * size;
-//        int toIndex = Math.min(fromIndex + size, totalItems);
-//
-//        List<Company> pagedCompanies = filteredCompanies.subList(fromIndex, toIndex);
-//
-//        return ResponseEntity.ok(Map.of(
-//                "content", pagedCompanies,
-//                "totalPages", totalPages,
-//                "totalItems", totalItems,
-//                "currentPage", page,
-//                "pageSize", size
-//        ));
-//    }
-//
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> getCompanies(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        List<Company> pageCompanies = companies;
+        int totalItems = pageCompanies.size();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        int fromIndex = (page - 1) * size;
+        int toIndex = Math.min(fromIndex + size, totalItems);
+
+        List<Company> pagedCompanies = pageCompanies.subList(fromIndex, toIndex);
+
+        return ResponseEntity.ok(Map.of(
+                "content", pagedCompanies,
+                "totalPages", totalPages,
+                "totalItems", totalItems,
+                "currentPage", page,
+                "pageSize", size
+        ));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Company> updateCompanyById(@RequestBody Company company, @PathVariable int id) {
         for (Company findCompany : companies) {

@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -116,46 +117,39 @@ class CompanyControllerTests {
                 .andReturn();
     }
 
-//    @Test
-//    void should_get_companies_with_pagination_when_get_given_10_valid_bodies() throws Exception {
-//        for (int i = 1; i <= 10; i++) {
-//            String requestBody = String.format("""
-//            {
-//                "name": "Company %d",
-//                "age": %d,
-//                "gender": "Male",
-//                "salary": %d
-//            }
-//            """, i, 20 + i, 10000 + i * 1000);
-//
-//            mockMvc.perform(post("/companies")
-//                            .contentType(MediaType.APPLICATION_JSON)
-//                            .content(requestBody))
-//                    .andReturn();
-//        }
-//        mockMvc.perform(get("/companies?page=1&size=5"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.content", hasSize(5)))
-//                .andExpect(jsonPath("$.totalPages").value(2))
-//                .andExpect(jsonPath("$.totalItems").value(10))
-//                .andExpect(jsonPath("$.currentPage").value(1))
-//                .andExpect(jsonPath("$.pageSize").value(5))
-//                .andExpect(jsonPath("$.content[0].name").value("Company 1"));
-//        mockMvc.perform(get("/companies?page=2&size=5"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.content", hasSize(5)))
-//                .andExpect(jsonPath("$.totalPages").value(2))
-//                .andExpect(jsonPath("$.totalItems").value(10))
-//                .andExpect(jsonPath("$.currentPage").value(2))
-//                .andExpect(jsonPath("$.pageSize").value(5))
-//                .andExpect(jsonPath("$.content[0].name").value("Company 6"));
-//        mockMvc.perform(get("/companies?gender=Male&page=1&size=3"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.content", hasSize(3)))
-//                .andExpect(jsonPath("$.totalItems").value(10));
-//        mockMvc.perform(get("/companies"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.currentPage").value(1))
-//                .andExpect(jsonPath("$.pageSize").value(5));
-//    }
+    @Test
+    void should_get_companies_with_pagination_when_get_given_10_valid_bodies() throws Exception {
+        for (int i = 1; i <= 10; i++) {
+            String requestBody = String.format("""
+            {
+                "name": "Company %d"
+            }
+            """, i);
+
+            mockMvc.perform(post("/companies")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(requestBody))
+                    .andReturn();
+        }
+        mockMvc.perform(get("/companies?page=1&size=5"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(5)))
+                .andExpect(jsonPath("$.totalPages").value(2))
+                .andExpect(jsonPath("$.totalItems").value(10))
+                .andExpect(jsonPath("$.currentPage").value(1))
+                .andExpect(jsonPath("$.pageSize").value(5))
+                .andExpect(jsonPath("$.content[0].name").value("Company 1"));
+        mockMvc.perform(get("/companies?page=2&size=5"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(5)))
+                .andExpect(jsonPath("$.totalPages").value(2))
+                .andExpect(jsonPath("$.totalItems").value(10))
+                .andExpect(jsonPath("$.currentPage").value(2))
+                .andExpect(jsonPath("$.pageSize").value(5))
+                .andExpect(jsonPath("$.content[0].name").value("Company 6"));
+        mockMvc.perform(get("/companies"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPage").value(1))
+                .andExpect(jsonPath("$.pageSize").value(5));
+    }
 }
