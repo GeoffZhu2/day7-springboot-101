@@ -1,4 +1,4 @@
-package com.oocl.springbootdemo.cpmpany;
+package com.oocl.springbootdemo;
 
 
 import java.io.Serializable;

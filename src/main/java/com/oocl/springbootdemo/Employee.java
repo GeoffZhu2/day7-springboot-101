@@ -1,4 +1,4 @@
-package com.oocl.springbootdemo.employee;
+package com.oocl.springbootdemo;
 
 
 import java.io.Serializable;

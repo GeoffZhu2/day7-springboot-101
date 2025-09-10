@@ -1,5 +1,6 @@
-package com.oocl.springbootdemo.employee;
+package com.oocl.springbootdemo.controller;
 
+import com.oocl.springbootdemo.Employee;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
