@@ -1,6 +1,7 @@
 package com.oocl.springbootdemo.repository;
 
 import com.oocl.springbootdemo.Employee;
+import com.oocl.springbootdemo.exception.EmployeeNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -24,30 +25,32 @@ public class EmployeeRepository {
         employeeId = 0;
     }
 
-    public Optional<Employee> findById(int id) {
-        return employees.stream()
-                .filter(e -> e.getId() == id)
-                .findFirst();
+    public Employee findById(int id) {
+        return employees.stream().filter(employee -> employee.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
+
 
     public List<Employee> findAll() {
         return employees;
     }
 
     public Employee update(Employee employee, int id) {
-        Optional<Employee> employeeOptional = findById(id);
-        if(employeeOptional.isPresent()) {
-            Employee updatedEmployee = employeeOptional.get();
-            updatedEmployee.setName(employee.getName());
-            updatedEmployee.setAge(employee.getAge());
-            updatedEmployee.setGender(employee.getGender());
-            updatedEmployee.setSalary(employee.getSalary());
-            return updatedEmployee;
-        }
-        return null;
+        Employee updatedEmployee = findById(id);
+        updatedEmployee.setName(employee.getName());
+        updatedEmployee.setAge(employee.getAge());
+        updatedEmployee.setGender(employee.getGender());
+        updatedEmployee.setSalary(employee.getSalary());
+        return updatedEmployee;
     }
 
-    public void delete(int id) {
-        employees.removeIf(findEmployee -> findEmployee.getId() == id);
+    public Employee delete(int id) {
+        Employee foundEmployee = findById(id);
+        if(foundEmployee == null) {
+            throw new EmployeeNotFoundException();
+        }
+        foundEmployee.setStatus(false);
+        return foundEmployee;
     }
 }

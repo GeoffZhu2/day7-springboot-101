@@ -1,7 +1,7 @@
 package com.oocl.springbootdemo.service;
 
 import com.oocl.springbootdemo.Employee;
-import com.oocl.springbootdemo.exception.EmployeeCreateException;
+import com.oocl.springbootdemo.exception.InvalidEmployeeAgeException;
 import com.oocl.springbootdemo.exception.EmployeeNotFoundException;
 import com.oocl.springbootdemo.exception.SalaryNotPatchEmployeeAgeException;
 import com.oocl.springbootdemo.repository.EmployeeRepository;
@@ -33,8 +33,8 @@ public class EmployeeServiceTests {
         employee1.setId(2);
         employee1.setAge(66);
         employee1.setSalary(25000);
-        assertThrows(EmployeeCreateException.class, () -> employeeService.createEmployee(employee1));
-        assertThrows(EmployeeCreateException.class, () -> employeeService.createEmployee(employee2));
+        assertThrows(InvalidEmployeeAgeException.class, () -> employeeService.createEmployee(employee1));
+        assertThrows(InvalidEmployeeAgeException.class, () -> employeeService.createEmployee(employee2));
     }
 
     @Test
@@ -78,7 +78,7 @@ public class EmployeeServiceTests {
         employee.setGender("Male");
         employee.setSalary(1000);
 
-        when(employeeRepository.findById(1)).thenReturn(Optional.of(employee));
+        when(employeeRepository.findById(1)).thenReturn(employee);
         Employee foundEmployee = employeeService.getEmployeeById(1);
         assertEquals(employee, foundEmployee);
         verify(employeeRepository, times(1)).findById(1);
@@ -93,9 +93,23 @@ public class EmployeeServiceTests {
         employee.setGender("Male");
         employee.setSalary(1000);
 
-        when(employeeRepository.findById(1)).thenReturn(Optional.of(employee));
+        when(employeeRepository.findById(1)).thenReturn(employee);
         EmployeeNotFoundException exception = assertThrows(EmployeeNotFoundException.class, () -> employeeService.getEmployeeById(999));
-        assertEquals("Employee not found with id: 999", exception.getMessage());
         verify(employeeRepository, times(1)).findById(999);
+    }
+    @Test
+    public void should_set_employee_status_to_false_given_exist_employee_id_when_delete() {
+        Employee employee = new Employee();
+        employee.setId(1);
+        employee.setName("Tom");
+        employee.setAge(20);
+        employee.setGender("Male");
+        employee.setSalary(1000);
+        employee.setStatus(false);
+
+        when(employeeRepository.delete(1)).thenReturn(employee);
+        Employee deleteEmploy = employeeService.deleteEmployeeById(1);
+        assertFalse(deleteEmploy.isStatus());
+        verify(employeeRepository, times(1)).delete(1);
     }
 }

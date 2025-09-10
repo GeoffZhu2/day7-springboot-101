@@ -1,7 +1,7 @@
 package com.oocl.springbootdemo.service;
 
 import com.oocl.springbootdemo.Employee;
-import com.oocl.springbootdemo.exception.EmployeeCreateException;
+import com.oocl.springbootdemo.exception.InvalidEmployeeAgeException;
 import com.oocl.springbootdemo.exception.EmployeeNotFoundException;
 import com.oocl.springbootdemo.exception.SalaryNotPatchEmployeeAgeException;
 import com.oocl.springbootdemo.repository.EmployeeRepository;
@@ -22,7 +22,7 @@ public class EmployeeService {
 
     public Employee createEmployee(Employee employee) {
         if(employee.getAge() < 18 || employee.getAge() > 65) {
-            throw new EmployeeCreateException();
+            throw new InvalidEmployeeAgeException();
         }
         if(employee.getAge() > 30 && employee.getSalary() < 20000) {
             throw new SalaryNotPatchEmployeeAgeException();
@@ -31,8 +31,11 @@ public class EmployeeService {
     }
 
     public Employee getEmployeeById(int id) {
-        Optional<Employee> employeeOptional = employeeRepository.findById(id);
-        return employeeOptional.orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
+        Employee foundEmployee = employeeRepository.findById(id);
+        if(foundEmployee == null) {
+            throw new EmployeeNotFoundException();
+        }
+        return foundEmployee;
     }
 
     public Map<String, Object> getEmployees(String gender, int page, int size) {
@@ -72,8 +75,8 @@ public class EmployeeService {
         return employeeRepository.update(employee, id);
     }
 
-    public void deleteEmployeeById(int id) {
-        employeeRepository.delete(id);
+    public Employee deleteEmployeeById(int id) {
+        return employeeRepository.delete(id);
     }
 
     public void clearEmployees() {

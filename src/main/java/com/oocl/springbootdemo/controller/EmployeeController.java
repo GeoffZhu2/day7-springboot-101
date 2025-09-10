@@ -1,7 +1,7 @@
 package com.oocl.springbootdemo.controller;
 
 import com.oocl.springbootdemo.Employee;
-import com.oocl.springbootdemo.exception.EmployeeCreateException;
+import com.oocl.springbootdemo.exception.InvalidEmployeeAgeException;
 import com.oocl.springbootdemo.exception.EmployeeNotFoundException;
 import com.oocl.springbootdemo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,22 +19,14 @@ public class EmployeeController {
 
     @PostMapping
     public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
-        try {
-            Employee createdEmployee = employeeService.createEmployee(employee);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
-        } catch (EmployeeCreateException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        Employee createdEmployee = employeeService.createEmployee(employee);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable int id) {
-        try {
-            Employee employee = employeeService.getEmployeeById(id);
-            return ResponseEntity.status(HttpStatus.OK).body(employee);
-        } catch (EmployeeNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        Employee employee = employeeService.getEmployeeById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(employee);
     }
 
     @GetMapping
@@ -53,7 +45,7 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.OK).body(updatedEmployee);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEmployeeById(@PathVariable int id) {
+    public ResponseEntity<Employee> deleteEmployeeById(@PathVariable int id) {
         employeeService.deleteEmployeeById(id);
         return ResponseEntity.noContent().build();
     }

@@ -244,7 +244,7 @@ class EmployeeControllerTests {
                 .andReturn();
 
         mockMvc.perform(delete("/employees/2"))
-                .andExpect(status().isNoContent())
+                .andExpect(status().isNotFound())
                 .andReturn();
         mockMvc.perform(delete("/employees/1"))
                 .andExpect(status().isNoContent())
