@@ -3,8 +3,6 @@ package com.oocl.springbootdemo.service;
 import com.oocl.springbootdemo.Employee;
 import com.oocl.springbootdemo.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -28,7 +26,7 @@ public class EmployeeService {
         return employeeOptional.orElse(null);
     }
 
-    public ResponseEntity<Map<String, Object>> getEmployees(String gender, int page, int size) {
+    public Map<String, Object> getEmployees(String gender, int page, int size) {
         List<Employee> employees = employeeRepository.findAll();
         List<Employee> filteredEmployees = employees;
 
@@ -42,25 +40,23 @@ public class EmployeeService {
 
         int fromIndex = (page - 1) * size;
         if (fromIndex > totalItems) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("content", List.of());
-            response.put("totalPages", totalPages);
-            response.put("totalItems", totalItems);
-            response.put("currentPage", page);
-            response.put("pageSize", size);
-            return ResponseEntity.ok(response);
+            return getEmployeeResponse(employees, page, size, totalPages, totalItems);
         }
         int toIndex = Math.min(fromIndex + size, totalItems);
 
         List<Employee> pagedEmployees = filteredEmployees.subList(fromIndex, toIndex);
 
+        return getEmployeeResponse(pagedEmployees, page, size, totalPages, totalItems);
+    }
+
+    private Map<String, Object> getEmployeeResponse(List<Employee> pagedEmployees, int page, int size, int totalPages, int totalItems) {
         Map<String, Object> response = new HashMap<>();
         response.put("content", pagedEmployees);
         response.put("totalPages", totalPages);
         response.put("totalItems", totalItems);
         response.put("currentPage", page);
         response.put("pageSize", size);
-        return ResponseEntity.ok(response);
+        return response;
     }
 
     public Employee updateEmployeeById(Employee employee, int id) {

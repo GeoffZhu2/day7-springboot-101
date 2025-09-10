@@ -36,20 +36,18 @@ public class CompanyService {
 
         int fromIndex = (page - 1) * size;
         if (fromIndex > totalItems) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("content", List.of());
-            response.put("totalPages", totalPages);
-            response.put("totalItems", totalItems);
-            response.put("currentPage", page);
-            response.put("pageSize", size);
-            return response;
+            return getCompanyResponse(companies, page, size, totalPages, totalItems);
         }
         int toIndex = Math.min(fromIndex + size, totalItems);
 
         List<Company> pagedCompanies = companies.subList(fromIndex, toIndex);
 
+        return getCompanyResponse(pagedCompanies, page, size, totalPages, totalItems);
+    }
+
+    private Map<String, Object> getCompanyResponse(List<Company> companies, int page, int size, int totalPages, int totalItems) {
         Map<String, Object> response = new HashMap<>();
-        response.put("content", pagedCompanies);
+        response.put("content", companies);
         response.put("totalPages", totalPages);
         response.put("totalItems", totalItems);
         response.put("currentPage", page);

@@ -32,7 +32,9 @@ public class EmployeeController {
             @RequestParam(required = false) String gender,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "5") int size) {
-        return employeeService.getEmployees(gender, page, size);
+
+        Map<String, Object> employees = employeeService.getEmployees(gender, page, size);
+        return ResponseEntity.status(HttpStatus.OK).body(employees);
     }
 
     @PutMapping("/{id}")
@@ -41,7 +43,7 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.OK).body(updatedEmployee);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<Employee> deleteEmployeeById(@PathVariable int id) {
+    public ResponseEntity<Void> deleteEmployeeById(@PathVariable int id) {
         employeeService.deleteEmployeeById(id);
         return ResponseEntity.noContent().build();
     }
