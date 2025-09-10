@@ -1,5 +1,6 @@
 package com.oocl.springbootdemo.controller;
 
+import com.oocl.springbootdemo.service.EmployeeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,10 @@ class EmployeeControllerTests {
     private MockMvc mockMvc;
 
     @Autowired
-    private EmployeeController employeeController;
+    private EmployeeService employeeService;
     @BeforeEach
     void setUp() {
-        employeeController.clearEmployees();
+        employeeService.clearEmployees();
     }
     @Test
     void should_create_employee_when_post_given_a_valid_body() throws Exception {

@@ -1,5 +1,6 @@
 package com.oocl.springbootdemo.controller;
 
+import com.oocl.springbootdemo.service.CompanyService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,10 @@ class CompanyControllerTests {
     private MockMvc mockMvc;
 
     @Autowired
-    private CompanyController companyController;
+    private CompanyService companyService;
     @BeforeEach
     void setUp() {
-        companyController.clearCompanies();
+        companyService.clearCompanies();
     }
     @Test
     void should_create_company_when_post_given_a_valid_body() throws Exception {

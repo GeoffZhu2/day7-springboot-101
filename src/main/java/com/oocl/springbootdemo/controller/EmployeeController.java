@@ -1,6 +1,8 @@
 package com.oocl.springbootdemo.controller;
 
 import com.oocl.springbootdemo.Employee;
+import com.oocl.springbootdemo.service.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,91 +13,33 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
-
-    List<Employee> employees = new ArrayList<>();
-    static int employeeId = 0;
+    @Autowired
+    private EmployeeService employeeService;
 
     @PostMapping
     public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
-        employee.setId(++employeeId);
-        employees.add(employee);
-        return ResponseEntity.status(HttpStatus.CREATED).body(employee);
+        return employeeService.createEmployee(employee);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Employee> queryEmployeeById(@PathVariable int id) {
-        Optional<Employee> employee = employees.stream()
-                .filter(e -> e.getId() == id)
-                .findFirst();
-
-        return employee.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return employeeService.queryEmployeeById(id);
     }
+
     @GetMapping
     public ResponseEntity<Map<String, Object>> getEmployees(
             @RequestParam(required = false) String gender,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "5") int size) {
-        List<Employee> filteredEmployees = employees;
-        if (gender != null) {
-            filteredEmployees = employees.stream()
-                    .filter(employee -> employee.getGender().equalsIgnoreCase(gender))
-                    .collect(Collectors.toList());
-        }
-        int totalItems = filteredEmployees.size();
-        int totalPages = (int) Math.ceil((double) totalItems / size);
-
-        int fromIndex = (page - 1) * size;
-        if (fromIndex > totalItems) {
-            return ResponseEntity.ok(Map.of(
-                    "content", filteredEmployees,
-                    "totalPages", totalPages,
-                    "totalItems", totalItems,
-                    "currentPage", page,
-                    "pageSize", size
-            ));
-        }
-        int toIndex = Math.min(fromIndex + size, totalItems);
-
-        List<Employee> pagedEmployees = filteredEmployees.subList(fromIndex, toIndex);
-
-        return ResponseEntity.ok(Map.of(
-                "content", pagedEmployees,
-                "totalPages", totalPages,
-                "totalItems", totalItems,
-                "currentPage", page,
-                "pageSize", size
-        ));
+        return employeeService.getEmployees(gender, page, size);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Employee> updateEmployeeById(@RequestBody Employee employee, @PathVariable int id) {
-        Optional<Employee> employeeOptional = employees.stream()
-                .filter(e -> e.getId() == id)
-                .findFirst();
-        if (employeeOptional.isPresent()) {
-            Employee updatedEmployee = employeeOptional.get();
-            updatedEmployee.setName(employee.getName());
-            updatedEmployee.setAge(employee.getAge());
-            updatedEmployee.setGender(employee.getGender());
-            updatedEmployee.setSalary(employee.getSalary());
-            return ResponseEntity.ok(updatedEmployee);
-        }
-        return ResponseEntity.notFound().build();
+        return employeeService.updateEmployeeById(employee, id);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Employee> deleteEmployeeById(@PathVariable int id) {
-        for (Employee findEmployee : employees) {
-            if(findEmployee.getId() == id) {
-                employees.remove(findEmployee);
-                return ResponseEntity.noContent().build();
-            }
-        }
-        return ResponseEntity.noContent().build();
-    }
-
-    public void clearEmployees() {
-        employees.clear();
-        employeeId = 0;
+        return employeeService.deleteEmployeeById(id);
     }
 }

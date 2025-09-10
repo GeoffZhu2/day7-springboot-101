@@ -1,6 +1,8 @@
 package com.oocl.springbootdemo.controller;
 
 import com.oocl.springbootdemo.Company;
+import com.oocl.springbootdemo.service.CompanyService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,21 +16,16 @@ import java.util.Optional;
 @RequestMapping("/companies")
 public class CompanyController {
 
-    List<Company> companies = new ArrayList<>();
-    static int companyId = 0;
+    @Autowired
+    private CompanyService companyService;
     @PostMapping
     public ResponseEntity<Company> createCompany(@RequestBody Company company) {
-        company.setId(++companyId);
-        companies.add(company);
-        return ResponseEntity.status(HttpStatus.CREATED).body(company);
+        return ResponseEntity.status(HttpStatus.CREATED).body(companyService.createCompany(company));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Company> queryCompanyById(@PathVariable int id) {
-        Optional<Company> company = companies.stream()
-                .filter(e -> e.getId() == id)
-                .findFirst();
-
+        Optional<Company> company = companyService.queryCompanyById(id);
         return company.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -37,58 +34,17 @@ public class CompanyController {
     public ResponseEntity<Map<String, Object>> getCompanies(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "5") int size) {
-        List<Company> pageCompanies = companies;
-        int totalItems = pageCompanies.size();
-        int totalPages = (int) Math.ceil((double) totalItems / size);
-
-        int fromIndex = (page - 1) * size;
-        int toIndex = Math.min(fromIndex + size, totalItems);
-        if (fromIndex > totalItems) {
-            return ResponseEntity.ok(Map.of(
-                    "content", pageCompanies,
-                    "totalPages", totalPages,
-                    "totalItems", totalItems,
-                    "currentPage", page,
-                    "pageSize", size
-            ));
-        }
-        List<Company> pagedCompanies = pageCompanies.subList(fromIndex, toIndex);
-
-        return ResponseEntity.ok(Map.of(
-                "content", pagedCompanies,
-                "totalPages", totalPages,
-                "totalItems", totalItems,
-                "currentPage", page,
-                "pageSize", size
-        ));
+        return companyService.getCompanies(page, size);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Company> updateCompanyById(@RequestBody Company company, @PathVariable int id) {
-        Optional<Company> companyOptional = companies.stream()
-                .filter(c -> c.getId() == id)
-                .findFirst();
-        if(companyOptional.isPresent()) {
-            Company updatedCompany = companyOptional.get();
-            updatedCompany.setName(company.getName());
-            return ResponseEntity.ok(updatedCompany);
-        }
-        return ResponseEntity.notFound().build();
+        return companyService.updateCompanyById(company, id);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Company> deleteCompanyById(@PathVariable int id) {
-        for (Company findCompany : companies) {
-            if(findCompany.getId() == id) {
-                companies.remove(findCompany);
-                return ResponseEntity.noContent().build();
-            }
-        }
-        return ResponseEntity.noContent().build();
+        return companyService.deleteCompanyById(id);
     }
 
-    public void clearCompanies() {
-        companies.clear();
-        companyId = 0;
-    }
 }
