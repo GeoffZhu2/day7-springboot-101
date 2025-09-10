@@ -23,7 +23,7 @@ public class EmployeeService {
         return ResponseEntity.status(HttpStatus.CREATED).body(employee);
     }
 
-    public ResponseEntity<Employee> queryEmployeeById(int id) {
+    public ResponseEntity<Employee> getEmployeeById(int id) {
         Optional<Employee> employee = employees.stream()
                 .filter(e -> e.getId() == id)
                 .findFirst();

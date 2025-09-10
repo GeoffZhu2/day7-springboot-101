@@ -3,12 +3,10 @@ package com.oocl.springbootdemo.controller;
 import com.oocl.springbootdemo.Employee;
 import com.oocl.springbootdemo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/employees")
@@ -22,8 +20,8 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Employee> queryEmployeeById(@PathVariable int id) {
-        return employeeService.queryEmployeeById(id);
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable int id) {
+        return employeeService.getEmployeeById(id);
     }
 
     @GetMapping
