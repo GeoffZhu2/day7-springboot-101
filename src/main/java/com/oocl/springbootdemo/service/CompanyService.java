@@ -1,6 +1,7 @@
 package com.oocl.springbootdemo.service;
 
 import com.oocl.springbootdemo.Company;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -15,20 +16,22 @@ public class CompanyService {
     List<Company> companies = new ArrayList<>();
     static int companyId = 0;
 
-    public Company createCompany(Company company) {
+    public ResponseEntity<Company> createCompany(Company company) {
         company.setId(++companyId);
         companies.add(company);
-        return company;
+        return ResponseEntity.status(HttpStatus.CREATED).body(company);
     }
     public void clearCompanies() {
         companies.clear();
         companyId = 0;
     }
 
-    public Optional<Company> queryCompanyById(int id) {
-        return companies.stream()
+    public ResponseEntity<Company> getCompanyById(int id) {
+        Optional<Company> company = companies.stream()
                 .filter(e -> e.getId() == id)
                 .findFirst();
+        return company.map(ResponseEntity::ok)
+                        .orElse(ResponseEntity.notFound().build());
     }
 
     public ResponseEntity<Map<String, Object>> getCompanies(int page, int size) {
