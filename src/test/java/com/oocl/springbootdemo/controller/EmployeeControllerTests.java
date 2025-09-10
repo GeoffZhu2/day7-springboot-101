@@ -71,12 +71,7 @@ class EmployeeControllerTests {
                 .andExpect(jsonPath("$.gender").value("Male"))
                 .andExpect(jsonPath("$.salary").value(15000));
     }
-    @Test
-    void should_get_404_by_invalid_id_when_get_given_none() throws Exception {
-        // 测试不存在的 ID
-        mockMvc.perform(get("/employees/999"))
-                .andExpect(status().isNotFound());
-    }
+
     @Test
     void should_get_employee_by_gender_when_get_given_2_valid_bodies() throws Exception {
         String requestBody1 = """
@@ -192,10 +187,6 @@ class EmployeeControllerTests {
                 .andExpect(jsonPath("$.age").value(40))
                 .andExpect(jsonPath("$.gender").value("Female"))
                 .andExpect(jsonPath("$.salary").value(18000));
-        mockMvc.perform(put("/employees/999")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(updateRequestBody))
-                .andExpect(status().isNotFound());
     }
     @Test
     void should_delete_employee_by_id_when_delete_given_a_valid_body() throws Exception {

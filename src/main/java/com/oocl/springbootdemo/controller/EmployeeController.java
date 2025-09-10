@@ -3,6 +3,7 @@ package com.oocl.springbootdemo.controller;
 import com.oocl.springbootdemo.Employee;
 import com.oocl.springbootdemo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,12 +17,14 @@ public class EmployeeController {
 
     @PostMapping
     public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
-        return employeeService.createEmployee(employee);
+        Employee createdEmployee = employeeService.createEmployee(employee);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable int id) {
-        return employeeService.getEmployeeById(id);
+        Employee employee = employeeService.getEmployeeById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(employee);
     }
 
     @GetMapping
@@ -34,10 +37,12 @@ public class EmployeeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Employee> updateEmployeeById(@RequestBody Employee employee, @PathVariable int id) {
-        return employeeService.updateEmployeeById(employee, id);
+        Employee updatedEmployee = employeeService.updateEmployeeById(employee, id);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedEmployee);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Employee> deleteEmployeeById(@PathVariable int id) {
-        return employeeService.deleteEmployeeById(id);
+        employeeService.deleteEmployeeById(id);
+        return ResponseEntity.noContent().build();
     }
 }
