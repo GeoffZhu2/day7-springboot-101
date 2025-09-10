@@ -14,10 +14,10 @@ import java.util.Optional;
 public class CompanyController {
 
     List<Company> companies = new ArrayList<>();
-
+    static int companyId = 0;
     @PostMapping
     public ResponseEntity<Company> createCompany(@RequestBody Company company) {
-        company.setId(companies.size() + 1);
+        company.setId(++companyId);
         companies.add(company);
         return ResponseEntity.status(HttpStatus.CREATED).body(company);
     }
@@ -88,5 +88,6 @@ public class CompanyController {
 
     public void clearCompanies() {
         companies.clear();
+        companyId = 0;
     }
 }

@@ -12,10 +12,11 @@ import java.util.stream.Collectors;
 public class EmployeeController {
 
     List<Employee> employees = new ArrayList<>();
+    static int employeeId = 0;
 
     @PostMapping
     public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
-        employee.setId(employees.size() + 1);
+        employee.setId(++employeeId);
         employees.add(employee);
         return ResponseEntity.status(HttpStatus.CREATED).body(employee);
     }
@@ -94,5 +95,6 @@ public class EmployeeController {
 
     public void clearEmployees() {
         employees.clear();
+        employeeId = 0;
     }
 }
