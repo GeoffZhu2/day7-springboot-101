@@ -1,8 +1,8 @@
 package com.oocl.springbootdemo.service;
 
 import com.oocl.springbootdemo.Employee;
-import com.oocl.springbootdemo.exception.InvalidEmployeeAgeException;
 import com.oocl.springbootdemo.exception.EmployeeNotFoundException;
+import com.oocl.springbootdemo.exception.InvalidEmployeeAgeException;
 import com.oocl.springbootdemo.exception.SalaryNotPatchEmployeeAgeException;
 import com.oocl.springbootdemo.exception.UpdateLeftEmployeeException;
 import com.oocl.springbootdemo.repository.EmployeeRepository;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -84,7 +83,11 @@ public class EmployeeService {
     }
 
     public Employee deleteEmployeeById(int id) {
-        return employeeRepository.delete(id);
+        Employee foundEmployee = employeeRepository.findById(id);
+        if(foundEmployee == null) {
+            throw new EmployeeNotFoundException();
+        }
+        return employeeRepository.delete(foundEmployee);
     }
 
     public void clearEmployees() {

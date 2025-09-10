@@ -1,7 +1,6 @@
 package com.oocl.springbootdemo.repository;
 
 import com.oocl.springbootdemo.Employee;
-import com.oocl.springbootdemo.exception.EmployeeNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -44,12 +43,8 @@ public class EmployeeRepository {
         return employee;
     }
 
-    public Employee delete(int id) {
-        Employee foundEmployee = findById(id);
-        if(foundEmployee == null) {
-            throw new EmployeeNotFoundException();
-        }
-        foundEmployee.setStatus(false);
-        return foundEmployee;
+    public Employee delete(Employee employee) {
+        employee.setStatus(false);
+        return employee;
     }
 }

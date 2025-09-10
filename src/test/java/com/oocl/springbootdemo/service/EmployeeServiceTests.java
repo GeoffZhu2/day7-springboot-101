@@ -1,16 +1,14 @@
 package com.oocl.springbootdemo.service;
 
 import com.oocl.springbootdemo.Employee;
-import com.oocl.springbootdemo.exception.InvalidEmployeeAgeException;
 import com.oocl.springbootdemo.exception.EmployeeNotFoundException;
+import com.oocl.springbootdemo.exception.InvalidEmployeeAgeException;
 import com.oocl.springbootdemo.exception.SalaryNotPatchEmployeeAgeException;
 import com.oocl.springbootdemo.repository.EmployeeRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -94,22 +92,32 @@ public class EmployeeServiceTests {
         employee.setSalary(1000);
 
         when(employeeRepository.findById(1)).thenReturn(employee);
-        EmployeeNotFoundException exception = assertThrows(EmployeeNotFoundException.class, () -> employeeService.getEmployeeById(999));
+        assertThrows(EmployeeNotFoundException.class, () -> employeeService.getEmployeeById(999));
         verify(employeeRepository, times(1)).findById(999);
     }
+
     @Test
     public void should_set_employee_status_to_false_given_exist_employee_id_when_delete() {
-        Employee employee = new Employee();
-        employee.setId(1);
-        employee.setName("Tom");
-        employee.setAge(20);
-        employee.setGender("Male");
-        employee.setSalary(1000);
-        employee.setStatus(false);
+        Employee beforeDeleteEmployee = new Employee();
+        beforeDeleteEmployee.setId(1);
+        beforeDeleteEmployee.setName("Tom");
+        beforeDeleteEmployee.setAge(20);
+        beforeDeleteEmployee.setGender("Male");
+        beforeDeleteEmployee.setSalary(1000);
+        beforeDeleteEmployee.setStatus(true);
 
-        when(employeeRepository.delete(1)).thenReturn(employee);
-        Employee deleteEmploy = employeeService.deleteEmployeeById(1);
-        assertFalse(deleteEmploy.isStatus());
-        verify(employeeRepository, times(1)).delete(1);
+        Employee afterDeleteEmployee = new Employee();
+        afterDeleteEmployee.setId(1);
+        afterDeleteEmployee.setName("Tom");
+        afterDeleteEmployee.setAge(20);
+        afterDeleteEmployee.setGender("Male");
+        afterDeleteEmployee.setSalary(1000);
+        afterDeleteEmployee.setStatus(false);
+
+        when(employeeRepository.delete(beforeDeleteEmployee)).thenReturn(afterDeleteEmployee);
+        when(employeeRepository.findById(1)).thenReturn(beforeDeleteEmployee);
+        Employee deleteEmployee = employeeService.deleteEmployeeById(1);
+        assertFalse(deleteEmployee.isStatus());
+        verify(employeeRepository, times(1)).delete(beforeDeleteEmployee);
     }
 }
