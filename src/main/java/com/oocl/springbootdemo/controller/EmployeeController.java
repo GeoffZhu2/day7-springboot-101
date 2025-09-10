@@ -1,6 +1,7 @@
 package com.oocl.springbootdemo.controller;
 
 import com.oocl.springbootdemo.Employee;
+import com.oocl.springbootdemo.exception.EmployeeNotAmongLegalAgeException;
 import com.oocl.springbootdemo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,8 +18,12 @@ public class EmployeeController {
 
     @PostMapping
     public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
-        Employee createdEmployee = employeeService.createEmployee(employee);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
+        try {
+            Employee createdEmployee = employeeService.createEmployee(employee);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
+        } catch (EmployeeNotAmongLegalAgeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     @GetMapping("/{id}")

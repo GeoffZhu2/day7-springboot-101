@@ -49,6 +49,32 @@ class EmployeeControllerTests {
     }
 
     @Test
+    void should_not_create_employee_when_post_given_a_valid_body() throws Exception {
+        String requestBody1 = """
+                {
+                    "name": "John Smith",
+                    "age": 17,
+                    "gender": "Male",
+                    "salary": 15000
+                }
+                """;
+        String requestBody2 = """
+                {
+                    "name": "John Smith",
+                    "age": 66,
+                    "gender": "Male",
+                    "salary": 15000
+                }
+                """;
+        mockMvc.perform(post("/employees").contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody1))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(post("/employees").contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody2))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void should_get_employee_by_valid_id_when_get_given_a_valid_body() throws Exception {
         String requestBody = """
                 {

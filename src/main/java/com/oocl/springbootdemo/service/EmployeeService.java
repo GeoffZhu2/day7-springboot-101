@@ -1,6 +1,7 @@
 package com.oocl.springbootdemo.service;
 
 import com.oocl.springbootdemo.Employee;
+import com.oocl.springbootdemo.exception.EmployeeNotAmongLegalAgeException;
 import com.oocl.springbootdemo.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,9 @@ public class EmployeeService {
    private EmployeeRepository employeeRepository;
 
     public Employee createEmployee(Employee employee) {
+        if(employee.getAge() < 18 || employee.getAge() > 65) {
+            throw new EmployeeNotAmongLegalAgeException();
+        }
         return employeeRepository.create(employee);
     }
 
