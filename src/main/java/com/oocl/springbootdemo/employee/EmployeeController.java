@@ -84,7 +84,7 @@ public class EmployeeController {
         for (Employee findEmployee : employees) {
             if(findEmployee.getId() == id) {
                 employees.remove(findEmployee);
-                return ResponseEntity.ok().build();
+                return ResponseEntity.noContent().build();
             }
         }
         return ResponseEntity.noContent().build();

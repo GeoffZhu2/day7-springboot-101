@@ -61,7 +61,6 @@ class CompanyControllerTests {
     }
     @Test
     void should_get_404_by_invalid_id_when_get_given_none() throws Exception {
-        // 测试不存在的 ID
         mockMvc.perform(get("/companies/999"))
                 .andExpect(status().isNotFound());
     }
@@ -111,7 +110,7 @@ class CompanyControllerTests {
                 .andExpect(status().isNoContent())
                 .andReturn();
         mockMvc.perform(delete("/companies/1"))
-                .andExpect(status().isOk())
+                .andExpect(status().isNoContent())
                 .andReturn();
     }
 

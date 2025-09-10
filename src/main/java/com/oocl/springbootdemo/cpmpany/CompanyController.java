@@ -78,7 +78,7 @@ public class CompanyController {
         for (Company findCompany : companies) {
             if(findCompany.getId() == id) {
                 companies.remove(findCompany);
-                return ResponseEntity.ok().build();
+                return ResponseEntity.noContent().build();
             }
         }
         return ResponseEntity.noContent().build();
