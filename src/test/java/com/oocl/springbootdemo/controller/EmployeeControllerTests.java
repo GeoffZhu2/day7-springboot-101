@@ -35,7 +35,7 @@ class EmployeeControllerTests {
                     "name": "John Smith",
                     "age": 35,
                     "gender": "Male",
-                    "salary": 15000
+                    "salary": 22000
                 }
                 """;
         mockMvc.perform(post("/employees").contentType(MediaType.APPLICATION_JSON)
@@ -45,7 +45,7 @@ class EmployeeControllerTests {
                 .andExpect(jsonPath("$.name").value("John Smith"))
                 .andExpect(jsonPath("$.age").value(35))
                 .andExpect(jsonPath("$.gender").value("Male"))
-                .andExpect(jsonPath("$.salary").value(15000));
+                .andExpect(jsonPath("$.salary").value(22000));
     }
 
     @Test
@@ -63,7 +63,7 @@ class EmployeeControllerTests {
                     "name": "John Smith",
                     "age": 66,
                     "gender": "Male",
-                    "salary": 15000
+                    "salary": 23000
                 }
                 """;
         mockMvc.perform(post("/employees").contentType(MediaType.APPLICATION_JSON)
@@ -81,7 +81,7 @@ class EmployeeControllerTests {
                     "name": "John Smith",
                     "age": 35,
                     "gender": "Male",
-                    "salary": 15000
+                    "salary": 25000
                 }
                 """;
         mockMvc.perform(post("/employees")
@@ -95,7 +95,7 @@ class EmployeeControllerTests {
                 .andExpect(jsonPath("$.name").value("John Smith"))
                 .andExpect(jsonPath("$.age").value(35))
                 .andExpect(jsonPath("$.gender").value("Male"))
-                .andExpect(jsonPath("$.salary").value(15000));
+                .andExpect(jsonPath("$.salary").value(25000));
         mockMvc.perform(get("/employees/999"))
                 .andExpect(status().isNotFound());
     }
@@ -107,7 +107,7 @@ class EmployeeControllerTests {
                     "name": "John Smith",
                     "age": 35,
                     "gender": "Male",
-                    "salary": 15000
+                    "salary": 30000
                 }
                 """;
         String requestBody2 = """
@@ -115,7 +115,7 @@ class EmployeeControllerTests {
                     "name": "Tom Cat",
                     "age": 40,
                     "gender": "Female",
-                    "salary": 18000
+                    "salary": 22000
                 }
                 """;
         mockMvc.perform(post("/employees")
@@ -134,7 +134,7 @@ class EmployeeControllerTests {
                 .andExpect(jsonPath("$.content[0].name").value("John Smith"))
                 .andExpect(jsonPath("$.content[0].age").value(35))
                 .andExpect(jsonPath("$.content[0].gender").value("Male"))
-                .andExpect(jsonPath("$.content[0].salary").value(15000))
+                .andExpect(jsonPath("$.content[0].salary").value(30000))
                 .andExpect(jsonPath("$.totalItems").value(1))
                 .andExpect(jsonPath("$.totalPages").value(1))
                 .andExpect(jsonPath("$.currentPage").value(1))
@@ -147,12 +147,12 @@ class EmployeeControllerTests {
                 .andExpect(jsonPath("$.content[0].name").value("John Smith"))
                 .andExpect(jsonPath("$.content[0].age").value(35))
                 .andExpect(jsonPath("$.content[0].gender").value("Male"))
-                .andExpect(jsonPath("$.content[0].salary").value(15000))
+                .andExpect(jsonPath("$.content[0].salary").value(30000))
                 .andExpect(jsonPath("$.content[1].id").value(2))
                 .andExpect(jsonPath("$.content[1].name").value("Tom Cat"))
                 .andExpect(jsonPath("$.content[1].age").value(40))
                 .andExpect(jsonPath("$.content[1].gender").value("Female"))
-                .andExpect(jsonPath("$.content[1].salary").value(18000))
+                .andExpect(jsonPath("$.content[1].salary").value(22000))
                 .andExpect(jsonPath("$.totalItems").value(2))
                 .andExpect(jsonPath("$.totalPages").value(1))
                 .andExpect(jsonPath("$.currentPage").value(1))
@@ -190,7 +190,7 @@ class EmployeeControllerTests {
                     "name": "John Smith",
                     "age": 35,
                     "gender": "Male",
-                    "salary": 15000
+                    "salary": 30000
                 }
                 """;
         String updateRequestBody = """
@@ -198,7 +198,7 @@ class EmployeeControllerTests {
                     "name": "Tom Cat",
                     "age": 40,
                     "gender": "Female",
-                    "salary": 18000
+                    "salary": 30000
                 }
                 """;
         mockMvc.perform(post("/employees")
@@ -214,7 +214,7 @@ class EmployeeControllerTests {
                 .andExpect(jsonPath("$.name").value("Tom Cat"))
                 .andExpect(jsonPath("$.age").value(40))
                 .andExpect(jsonPath("$.gender").value("Female"))
-                .andExpect(jsonPath("$.salary").value(18000));
+                .andExpect(jsonPath("$.salary").value(30000));
     }
     @Test
     void should_delete_employee_by_id_when_delete_given_a_valid_body() throws Exception {
