@@ -1,7 +1,7 @@
 package com.oocl.springbootdemo.service;
 
 import com.oocl.springbootdemo.Employee;
-import com.oocl.springbootdemo.exception.EmployeeNotAmongLegalAgeException;
+import com.oocl.springbootdemo.exception.EmployeeCreateException;
 import com.oocl.springbootdemo.exception.EmployeeNotFoundException;
 import com.oocl.springbootdemo.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,10 @@ public class EmployeeService {
 
     public Employee createEmployee(Employee employee) {
         if(employee.getAge() < 18 || employee.getAge() > 65) {
-            throw new EmployeeNotAmongLegalAgeException();
+            throw new EmployeeCreateException();
+        }
+        if(employee.getAge() > 30 && employee.getSalary() < 20000) {
+            throw new EmployeeCreateException();
         }
         return employeeRepository.create(employee);
     }

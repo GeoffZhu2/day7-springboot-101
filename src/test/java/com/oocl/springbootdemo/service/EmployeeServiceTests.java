@@ -1,7 +1,7 @@
 package com.oocl.springbootdemo.service;
 
 import com.oocl.springbootdemo.Employee;
-import com.oocl.springbootdemo.exception.EmployeeNotAmongLegalAgeException;
+import com.oocl.springbootdemo.exception.EmployeeCreateException;
 import com.oocl.springbootdemo.exception.EmployeeNotFoundException;
 import com.oocl.springbootdemo.repository.EmployeeRepository;
 import org.junit.jupiter.api.Test;
@@ -27,11 +27,25 @@ public class EmployeeServiceTests {
         Employee employee1 = new Employee();
         employee1.setId(1);
         employee1.setAge(17);
+        employee1.setSalary(25000);
         Employee employee2 = new Employee();
         employee1.setId(2);
         employee1.setAge(66);
-        assertThrows(EmployeeNotAmongLegalAgeException.class, () -> employeeService.createEmployee(employee1));
-        assertThrows(EmployeeNotAmongLegalAgeException.class, () -> employeeService.createEmployee(employee2));
+        employee1.setSalary(25000);
+        assertThrows(EmployeeCreateException.class, () -> employeeService.createEmployee(employee1));
+        assertThrows(EmployeeCreateException.class, () -> employeeService.createEmployee(employee2));
+    }
+
+    @Test
+    public void should_not_create_employee_given_age_over_30_and_salary_below_20000() {
+        Employee employee = new Employee();
+        employee.setId(1);
+        employee.setName("Tom");
+        employee.setAge(31);
+        employee.setGender("Male");
+        employee.setSalary(2222);
+
+        assertThrows(EmployeeCreateException.class, () -> employeeService.createEmployee(employee));
     }
 
     @Test

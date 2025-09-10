@@ -1,7 +1,7 @@
 package com.oocl.springbootdemo.controller;
 
 import com.oocl.springbootdemo.Employee;
-import com.oocl.springbootdemo.exception.EmployeeNotAmongLegalAgeException;
+import com.oocl.springbootdemo.exception.EmployeeCreateException;
 import com.oocl.springbootdemo.exception.EmployeeNotFoundException;
 import com.oocl.springbootdemo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class EmployeeController {
         try {
             Employee createdEmployee = employeeService.createEmployee(employee);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
-        } catch (EmployeeNotAmongLegalAgeException e) {
+        } catch (EmployeeCreateException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }

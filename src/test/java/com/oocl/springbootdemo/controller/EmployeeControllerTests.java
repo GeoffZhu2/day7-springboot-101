@@ -66,11 +66,22 @@ class EmployeeControllerTests {
                     "salary": 23000
                 }
                 """;
+        String requestBody3 = """
+                {
+                    "name": "John Smith",
+                    "age": 66,
+                    "gender": "Male",
+                    "salary": 2300
+                }
+                """;
         mockMvc.perform(post("/employees").contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody1))
                 .andExpect(status().isBadRequest());
         mockMvc.perform(post("/employees").contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody2))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(post("/employees").contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody3))
                 .andExpect(status().isBadRequest());
     }
 
