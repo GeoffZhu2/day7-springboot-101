@@ -2,6 +2,7 @@ package com.oocl.springbootdemo.controller;
 
 import com.oocl.springbootdemo.Employee;
 import com.oocl.springbootdemo.exception.EmployeeNotAmongLegalAgeException;
+import com.oocl.springbootdemo.exception.EmployeeNotFoundException;
 import com.oocl.springbootdemo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,8 +29,12 @@ public class EmployeeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable int id) {
-        Employee employee = employeeService.getEmployeeById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(employee);
+        try {
+            Employee employee = employeeService.getEmployeeById(id);
+            return ResponseEntity.status(HttpStatus.OK).body(employee);
+        } catch (EmployeeNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @GetMapping

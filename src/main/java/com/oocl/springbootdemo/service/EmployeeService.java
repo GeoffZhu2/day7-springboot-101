@@ -2,6 +2,7 @@ package com.oocl.springbootdemo.service;
 
 import com.oocl.springbootdemo.Employee;
 import com.oocl.springbootdemo.exception.EmployeeNotAmongLegalAgeException;
+import com.oocl.springbootdemo.exception.EmployeeNotFoundException;
 import com.oocl.springbootdemo.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class EmployeeService {
 
     public Employee getEmployeeById(int id) {
         Optional<Employee> employeeOptional = employeeRepository.findById(id);
-        return employeeOptional.orElse(null);
+        return employeeOptional.orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
     }
 
     public Map<String, Object> getEmployees(String gender, int page, int size) {

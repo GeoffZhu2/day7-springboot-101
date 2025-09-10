@@ -96,6 +96,8 @@ class EmployeeControllerTests {
                 .andExpect(jsonPath("$.age").value(35))
                 .andExpect(jsonPath("$.gender").value("Male"))
                 .andExpect(jsonPath("$.salary").value(15000));
+        mockMvc.perform(get("/employees/999"))
+                .andExpect(status().isNotFound());
     }
 
     @Test
