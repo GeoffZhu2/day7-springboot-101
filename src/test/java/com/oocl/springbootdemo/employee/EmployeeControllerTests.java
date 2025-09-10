@@ -25,12 +25,7 @@ class EmployeeControllerTests {
     private EmployeeController employeeController;
     @BeforeEach
     void setUp() {
-        // 在每个测试前清理数据
-        if (employeeController != null) {
-            // 假设您的 EmployeeController 有一个清空列表的方法
-            // 或者通过反射来清空数据
-            employeeController.clearEmployees();
-        }
+        employeeController.clearEmployees();
     }
     @Test
     void should_create_employee_when_post_given_a_valid_body() throws Exception {

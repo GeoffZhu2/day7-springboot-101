@@ -26,9 +26,7 @@ class CompanyControllerTests {
     private CompanyController companyController;
     @BeforeEach
     void setUp() {
-        if (companyController != null) {
-            companyController.clearCompanies();
-        }
+        companyController.clearCompanies();
     }
     @Test
     void should_create_company_when_post_given_a_valid_body() throws Exception {

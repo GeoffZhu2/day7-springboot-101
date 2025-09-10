@@ -44,6 +44,15 @@ public class EmployeeController {
         int totalPages = (int) Math.ceil((double) totalItems / size);
 
         int fromIndex = (page - 1) * size;
+        if (fromIndex > totalItems) {
+            return ResponseEntity.ok(Map.of(
+                    "content", filteredEmployees,
+                    "totalPages", totalPages,
+                    "totalItems", totalItems,
+                    "currentPage", page,
+                    "pageSize", size
+            ));
+        }
         int toIndex = Math.min(fromIndex + size, totalItems);
 
         List<Employee> pagedEmployees = filteredEmployees.subList(fromIndex, toIndex);

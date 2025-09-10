@@ -42,7 +42,15 @@ public class CompanyController {
 
         int fromIndex = (page - 1) * size;
         int toIndex = Math.min(fromIndex + size, totalItems);
-
+        if (fromIndex > totalItems) {
+            return ResponseEntity.ok(Map.of(
+                    "content", pageCompanies,
+                    "totalPages", totalPages,
+                    "totalItems", totalItems,
+                    "currentPage", page,
+                    "pageSize", size
+            ));
+        }
         List<Company> pagedCompanies = pageCompanies.subList(fromIndex, toIndex);
 
         return ResponseEntity.ok(Map.of(
