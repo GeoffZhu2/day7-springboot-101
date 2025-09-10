@@ -24,10 +24,12 @@ class EmployeeControllerTests {
 
     @Autowired
     private EmployeeService employeeService;
+
     @BeforeEach
     void setUp() {
         employeeService.clearEmployees();
     }
+
     @Test
     void should_create_employee_when_post_given_a_valid_body() throws Exception {
         String requestBody = """
@@ -202,15 +204,18 @@ class EmployeeControllerTests {
                     "name": "John Smith",
                     "age": 35,
                     "gender": "Male",
-                    "salary": 30000
+                    "salary": 30000,
+                    "status": true
                 }
                 """;
         String updateRequestBody = """
                 {
+                    "id": 1,
                     "name": "Tom Cat",
                     "age": 40,
                     "gender": "Female",
-                    "salary": 30000
+                    "salary": 30000,
+                    "status": true
                 }
                 """;
         mockMvc.perform(post("/employees")
@@ -228,6 +233,42 @@ class EmployeeControllerTests {
                 .andExpect(jsonPath("$.gender").value("Female"))
                 .andExpect(jsonPath("$.salary").value(30000));
     }
+
+    @Test
+    void should_not_update_employee_when_put_given_a_left_employee() throws Exception {
+        String createRequestBody = """
+                {
+                    "name": "John Smith",
+                    "age": 35,
+                    "gender": "Male",
+                    "salary": 30000
+                }
+                """;
+
+        String updateRequestBody = """
+                {
+                    "name": "Tom Cat",
+                    "age": 40,
+                    "gender": "Female",
+                    "salary": 30000,
+                    "status": false
+                }
+                """;
+        mockMvc.perform(post("/employees")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(createRequestBody))
+                .andReturn();
+        mockMvc.perform(delete("/employees/1"))
+                .andExpect(status().isNoContent())
+                .andReturn();
+
+        mockMvc.perform(put("/employees/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateRequestBody))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
     @Test
     void should_delete_employee_by_id_when_delete_given_a_valid_body() throws Exception {
         String requestBody1 = """
@@ -255,13 +296,13 @@ class EmployeeControllerTests {
     void should_get_employees_with_pagination_when_get_given_10_valid_bodies() throws Exception {
         for (int i = 1; i <= 10; i++) {
             String requestBody = String.format("""
-            {
-                "name": "Employee %d",
-                "age": %d,
-                "gender": "Male",
-                "salary": %d
-            }
-            """, i, 20 + i, 10000 + i * 1000);
+                    {
+                        "name": "Employee %d",
+                        "age": %d,
+                        "gender": "Male",
+                        "salary": %d
+                    }
+                    """, i, 20 + i, 10000 + i * 1000);
 
             mockMvc.perform(post("/employees")
                             .contentType(MediaType.APPLICATION_JSON)

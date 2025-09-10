@@ -6,12 +6,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class EmployeeRepository {
     private final List<Employee> employees = new ArrayList<>();
-    private static int employeeId = 0;
+    private int employeeId = 0;
 
     public Employee create(Employee employee) {
         employee.setId(++employeeId);
@@ -36,13 +35,13 @@ public class EmployeeRepository {
         return employees;
     }
 
-    public Employee update(Employee employee, int id) {
-        Employee updatedEmployee = findById(id);
-        updatedEmployee.setName(employee.getName());
-        updatedEmployee.setAge(employee.getAge());
-        updatedEmployee.setGender(employee.getGender());
-        updatedEmployee.setSalary(employee.getSalary());
-        return updatedEmployee;
+    public Employee update(Employee employee) {
+        employee.setName(employee.getName());
+        employee.setAge(employee.getAge());
+        employee.setGender(employee.getGender());
+        employee.setSalary(employee.getSalary());
+        employee.setStatus(employee.isStatus());
+        return employee;
     }
 
     public Employee delete(int id) {

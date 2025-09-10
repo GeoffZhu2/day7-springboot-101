@@ -4,6 +4,7 @@ import com.oocl.springbootdemo.Employee;
 import com.oocl.springbootdemo.exception.InvalidEmployeeAgeException;
 import com.oocl.springbootdemo.exception.EmployeeNotFoundException;
 import com.oocl.springbootdemo.exception.SalaryNotPatchEmployeeAgeException;
+import com.oocl.springbootdemo.exception.UpdateLeftEmployeeException;
 import com.oocl.springbootdemo.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,7 +73,14 @@ public class EmployeeService {
     }
 
     public Employee updateEmployeeById(Employee employee, int id) {
-        return employeeRepository.update(employee, id);
+        Employee foundEmployee = employeeRepository.findById(id);
+        if (foundEmployee == null) {
+            throw new EmployeeNotFoundException();
+        }
+        if (!foundEmployee.isStatus()) {
+            throw new UpdateLeftEmployeeException();
+        }
+        return employeeRepository.update(employee);
     }
 
     public Employee deleteEmployeeById(int id) {
