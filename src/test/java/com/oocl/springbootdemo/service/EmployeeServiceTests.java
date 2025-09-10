@@ -3,6 +3,7 @@ package com.oocl.springbootdemo.service;
 import com.oocl.springbootdemo.Employee;
 import com.oocl.springbootdemo.exception.EmployeeCreateException;
 import com.oocl.springbootdemo.exception.EmployeeNotFoundException;
+import com.oocl.springbootdemo.exception.SalaryNotPatchEmployeeAgeException;
 import com.oocl.springbootdemo.repository.EmployeeRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -45,7 +46,27 @@ public class EmployeeServiceTests {
         employee.setGender("Male");
         employee.setSalary(2222);
 
-        assertThrows(EmployeeCreateException.class, () -> employeeService.createEmployee(employee));
+        assertThrows(SalaryNotPatchEmployeeAgeException.class, () -> employeeService.createEmployee(employee));
+    }
+
+    @Test
+    public void should_create_an_active_status_employee_given_false_status_employee() {
+        Employee expectEmployee = new Employee();
+        expectEmployee.setId(1);
+        expectEmployee.setName("Tom");
+        expectEmployee.setAge(31);
+        expectEmployee.setGender("Male");
+        expectEmployee.setSalary(35000);
+        expectEmployee.setStatus(true);
+
+        Employee employee = new Employee();
+        employee.setName("Tom");
+        employee.setAge(31);
+        employee.setGender("Male");
+        employee.setSalary(35000);
+        when(employeeRepository.create(employee)).thenReturn(expectEmployee);
+        Employee foundEmployee = employeeService.createEmployee(employee);
+        assertTrue(foundEmployee.isStatus());
     }
 
     @Test

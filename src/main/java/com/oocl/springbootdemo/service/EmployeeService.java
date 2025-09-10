@@ -3,6 +3,7 @@ package com.oocl.springbootdemo.service;
 import com.oocl.springbootdemo.Employee;
 import com.oocl.springbootdemo.exception.EmployeeCreateException;
 import com.oocl.springbootdemo.exception.EmployeeNotFoundException;
+import com.oocl.springbootdemo.exception.SalaryNotPatchEmployeeAgeException;
 import com.oocl.springbootdemo.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class EmployeeService {
             throw new EmployeeCreateException();
         }
         if(employee.getAge() > 30 && employee.getSalary() < 20000) {
-            throw new EmployeeCreateException();
+            throw new SalaryNotPatchEmployeeAgeException();
         }
         return employeeRepository.create(employee);
     }

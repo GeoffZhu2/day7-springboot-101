@@ -45,7 +45,8 @@ class EmployeeControllerTests {
                 .andExpect(jsonPath("$.name").value("John Smith"))
                 .andExpect(jsonPath("$.age").value(35))
                 .andExpect(jsonPath("$.gender").value("Male"))
-                .andExpect(jsonPath("$.salary").value(22000));
+                .andExpect(jsonPath("$.salary").value(22000))
+                .andExpect(jsonPath("$.status").value(true));
     }
 
     @Test
@@ -177,7 +178,7 @@ class EmployeeControllerTests {
                     "name": "John Smith",
                     "age": 35,
                     "gender": "Male",
-                    "salary": 15000
+                    "salary": 35000
                 }
                 """;
         mockMvc.perform(post("/employees")
@@ -234,7 +235,7 @@ class EmployeeControllerTests {
                     "name": "John Smith",
                     "age": 35,
                     "gender": "Male",
-                    "salary": 15000
+                    "salary": 35000
                 }
                 """;
         mockMvc.perform(post("/employees")

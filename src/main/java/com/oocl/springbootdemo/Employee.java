@@ -9,6 +9,15 @@ public class Employee implements Serializable {
     private String gender;
     private int age;
     private double salary;
+    private boolean status;
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 
     public int getAge() {
         return age;
