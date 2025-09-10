@@ -68,14 +68,16 @@ public class EmployeeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Employee> updateEmployeeById(@RequestBody Employee employee, @PathVariable int id) {
-        for (Employee findEmployee : employees) {
-            if(findEmployee.getId() == id) {
-                findEmployee.setName(employee.getName());
-                findEmployee.setAge(employee.getAge());
-                findEmployee.setGender(employee.getGender());
-                findEmployee.setSalary(employee.getSalary());
-                return ResponseEntity.ok(findEmployee);
-            }
+        Optional<Employee> employeeOptional = employees.stream()
+                .filter(e -> e.getId() == id)
+                .findFirst();
+        if (employeeOptional.isPresent()) {
+            Employee updatedEmployee = employeeOptional.get();
+            updatedEmployee.setName(employee.getName());
+            updatedEmployee.setAge(employee.getAge());
+            updatedEmployee.setGender(employee.getGender());
+            updatedEmployee.setSalary(employee.getSalary());
+            return ResponseEntity.ok(updatedEmployee);
         }
         return ResponseEntity.notFound().build();
     }

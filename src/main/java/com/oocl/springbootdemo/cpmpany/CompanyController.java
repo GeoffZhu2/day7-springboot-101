@@ -64,11 +64,13 @@ public class CompanyController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Company> updateCompanyById(@RequestBody Company company, @PathVariable int id) {
-        for (Company findCompany : companies) {
-            if(findCompany.getId() == id) {
-                findCompany.setName(company.getName());
-                return ResponseEntity.ok(findCompany);
-            }
+        Optional<Company> companyOptional = companies.stream()
+                .filter(c -> c.getId() == id)
+                .findFirst();
+        if(companyOptional.isPresent()) {
+            Company updatedCompany = companyOptional.get();
+            updatedCompany.setName(company.getName());
+            return ResponseEntity.ok(updatedCompany);
         }
         return ResponseEntity.notFound().build();
     }
