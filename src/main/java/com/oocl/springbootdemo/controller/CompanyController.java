@@ -3,6 +3,7 @@ package com.oocl.springbootdemo.controller;
 import com.oocl.springbootdemo.Company;
 import com.oocl.springbootdemo.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,29 +18,39 @@ public class CompanyController {
 
     @PostMapping
     public ResponseEntity<Company> createCompany(@RequestBody Company company) {
-        return companyService.createCompany(company);
+        Company createdCompany = companyService.createCompany(company);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCompany);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Company> getCompanyById(@PathVariable int id) {
-        return companyService.getCompanyById(id);
+        Company company = companyService.getCompanyById(id);
+        if (company != null) {
+            return ResponseEntity.ok(company);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> getCompanies(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "5") int size) {
-        return companyService.getCompanies(page, size);
+        Map<String, Object> response = companyService.getCompanies(page, size);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Company> updateCompanyById(@RequestBody Company company, @PathVariable int id) {
-        return companyService.updateCompanyById(company, id);
+        Company updatedCompany = companyService.updateCompanyById(company, id);
+        if (updatedCompany != null) {
+            return ResponseEntity.ok(updatedCompany);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Company> deleteCompanyById(@PathVariable int id) {
-        return companyService.deleteCompanyById(id);
+    public ResponseEntity<Void> deleteCompanyById(@PathVariable int id) {
+        companyService.deleteCompanyById(id);
+        return ResponseEntity.noContent().build();
     }
-
 }

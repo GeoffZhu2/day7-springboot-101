@@ -1,11 +1,11 @@
 package com.oocl.springbootdemo.service;
 
 import com.oocl.springbootdemo.Company;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.oocl.springbootdemo.repository.CompanyRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -13,73 +13,55 @@ import java.util.Optional;
 @Service
 public class CompanyService {
 
-    List<Company> companies = new ArrayList<>();
-    static int companyId = 0;
+    @Autowired
+    private CompanyRepository companyRepository;
 
-    public ResponseEntity<Company> createCompany(Company company) {
-        company.setId(++companyId);
-        companies.add(company);
-        return ResponseEntity.status(HttpStatus.CREATED).body(company);
+    public Company createCompany(Company company) {
+        return companyRepository.create(company);
     }
+
     public void clearCompanies() {
-        companies.clear();
-        companyId = 0;
+        companyRepository.clearAll();
     }
 
-    public ResponseEntity<Company> getCompanyById(int id) {
-        Optional<Company> company = companies.stream()
-                .filter(e -> e.getId() == id)
-                .findFirst();
-        return company.map(ResponseEntity::ok)
-                        .orElse(ResponseEntity.notFound().build());
+    public Company getCompanyById(int id) {
+        Optional<Company> companyOptional = companyRepository.findById(id);
+        return companyOptional.orElse(null);
     }
 
-    public ResponseEntity<Map<String, Object>> getCompanies(int page, int size) {
-        List<Company> pageCompanies = companies;
-        int totalItems = pageCompanies.size();
+    public Map<String, Object> getCompanies(int page, int size) {
+        List<Company> companies = companyRepository.findAll();
+        int totalItems = companies.size();
         int totalPages = (int) Math.ceil((double) totalItems / size);
 
         int fromIndex = (page - 1) * size;
-        int toIndex = Math.min(fromIndex + size, totalItems);
         if (fromIndex > totalItems) {
-            return ResponseEntity.ok(Map.of(
-                    "content", pageCompanies,
-                    "totalPages", totalPages,
-                    "totalItems", totalItems,
-                    "currentPage", page,
-                    "pageSize", size
-            ));
+            Map<String, Object> response = new HashMap<>();
+            response.put("content", List.of());
+            response.put("totalPages", totalPages);
+            response.put("totalItems", totalItems);
+            response.put("currentPage", page);
+            response.put("pageSize", size);
+            return response;
         }
-        List<Company> pagedCompanies = pageCompanies.subList(fromIndex, toIndex);
+        int toIndex = Math.min(fromIndex + size, totalItems);
 
-        return ResponseEntity.ok(Map.of(
-                "content", pagedCompanies,
-                "totalPages", totalPages,
-                "totalItems", totalItems,
-                "currentPage", page,
-                "pageSize", size
-        ));
+        List<Company> pagedCompanies = companies.subList(fromIndex, toIndex);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", pagedCompanies);
+        response.put("totalPages", totalPages);
+        response.put("totalItems", totalItems);
+        response.put("currentPage", page);
+        response.put("pageSize", size);
+        return response;
     }
 
-    public ResponseEntity<Company> updateCompanyById(Company company, int id) {
-        Optional<Company> companyOptional = companies.stream()
-                .filter(c -> c.getId() == id)
-                .findFirst();
-        if(companyOptional.isPresent()) {
-            Company updatedCompany = companyOptional.get();
-            updatedCompany.setName(company.getName());
-            return ResponseEntity.ok(updatedCompany);
-        }
-        return ResponseEntity.notFound().build();
+    public Company updateCompanyById(Company company, int id) {
+        return companyRepository.update(company, id);
     }
 
-    public ResponseEntity<Company> deleteCompanyById(int id) {
-        for (Company findCompany : companies) {
-            if(findCompany.getId() == id) {
-                companies.remove(findCompany);
-                return ResponseEntity.noContent().build();
-            }
-        }
-        return ResponseEntity.noContent().build();
+    public void deleteCompanyById(int id) {
+        companyRepository.delete(id);
     }
 }
