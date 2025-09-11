@@ -212,7 +212,7 @@ class EmployeeControllerTests {
                     "status": true
                 }
                 """, id);
-        mockMvc.perform(put("/employees/{id}", id)
+        mockMvc.perform(put("/employees")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updateRequestBody))
                 .andExpect(status().isOk())
@@ -233,22 +233,23 @@ class EmployeeControllerTests {
                     "salary": 30000
                 }
                 """;
-
-        String updateRequestBody = """
+        long id = createEmployee(createRequestBody);
+        String updateRequestBody = String.format("""
                 {
+                    "id": %s,
                     "name": "Tom Cat",
                     "age": 40,
                     "gender": "Female",
                     "salary": 30000,
                     "status": false
                 }
-                """;
-        long id = createEmployee(createRequestBody);
+                """, id);
+
         mockMvc.perform(delete("/employees/{id}", id))
                 .andExpect(status().isNoContent())
                 .andReturn();
 
-        mockMvc.perform(put("/employees/{id}", id)
+        mockMvc.perform(put("/employees")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updateRequestBody))
                 .andExpect(status().isBadRequest())

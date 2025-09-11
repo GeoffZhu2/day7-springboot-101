@@ -66,8 +66,8 @@ public class EmployeeService {
         return response;
     }
 
-    public Employee updateEmployeeById(Employee employee, long id) {
-        Employee foundEmployee = getEmployeeById(id);
+    public Employee updateEmployeeById(Employee employee) {
+        Employee foundEmployee = getEmployeeById(employee.getId());
         if (!foundEmployee.isStatus()) {
             throw new UpdateLeftEmployeeException();
         }
