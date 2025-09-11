@@ -1,43 +1,39 @@
 package com.oocl.springbootdemo.repository;
 
 import com.oocl.springbootdemo.Company;
+import com.oocl.springbootdemo.repository.dao.CompanyJpaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public class CompanyRepositoryImpl implements CompanyRepository {
-    private final List<Company> companies = new ArrayList<>();
-    private static int companyId = 0;
+    @Autowired
+    private CompanyJpaRepository companyJpaRepository;
 
     public Company create(Company company) {
-        company.setId(++companyId);
-        companies.add(company);
-        return company;
+        return companyJpaRepository.save(company);
     }
 
     public void clearAll() {
-        companies.clear();
-        companyId = 0;
+        companyJpaRepository.deleteAll();
     }
 
-    public Company findById(int id) {
-        return companies.stream().filter(company -> company.getId() == id)
-                .findFirst()
+    public Company findById(long id) {
+        return companyJpaRepository.findById(id)
                 .orElse(null);
     }
 
     public List<Company> findAll() {
-        return companies;
+        return companyJpaRepository.findAll();
     }
 
     public Company update(Company company) {
-        company.setName(company.getName());
-        return company;
+        return companyJpaRepository.save(company);
     }
 
-    public void delete(int id) {
-        companies.removeIf(findCompany -> findCompany.getId() == id);
+    public void delete(long id) {
+        companyJpaRepository.deleteById(id);
     }
 }

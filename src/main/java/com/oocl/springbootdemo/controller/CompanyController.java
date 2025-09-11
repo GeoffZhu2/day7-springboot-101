@@ -23,7 +23,7 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Company> getCompanyById(@PathVariable int id) {
+    public ResponseEntity<Company> getCompanyById(@PathVariable long id) {
         Company company = companyService.getCompanyById(id);
         return ResponseEntity.status(HttpStatus.OK).body(company);
     }
@@ -37,13 +37,13 @@ public class CompanyController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Company> updateCompanyById(@RequestBody Company company, @PathVariable int id) {
+    public ResponseEntity<Company> updateCompanyById(@RequestBody Company company, @PathVariable long id) {
         Company updatedCompany = companyService.updateCompanyById(company, id);
         return ResponseEntity.status(HttpStatus.OK).body(updatedCompany);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCompanyById(@PathVariable int id) {
+    public ResponseEntity<Void> deleteCompanyById(@PathVariable long id) {
         companyService.deleteCompanyById(id);
         return ResponseEntity.noContent().build();
     }

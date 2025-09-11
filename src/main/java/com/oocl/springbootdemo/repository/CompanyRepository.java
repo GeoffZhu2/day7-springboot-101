@@ -10,11 +10,11 @@ public interface CompanyRepository {
 
     void clearAll();
 
-    Company findById(int id);
+    Company findById(long id);
 
     List<Company> findAll();
 
     Company update(Company company);
 
-    void delete(int id);
+    void delete(long id);
 }

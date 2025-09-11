@@ -24,7 +24,7 @@ public class CompanyService {
         companyRepository.clearAll();
     }
 
-    public Company getCompanyById(int id) {
+    public Company getCompanyById(long id) {
         Company foundCompany = companyRepository.findById(id);
         if (foundCompany == null) {
             throw new CompanyNotFoundException();
@@ -58,12 +58,12 @@ public class CompanyService {
         return response;
     }
 
-    public Company updateCompanyById(Company company, int id) {
+    public Company updateCompanyById(Company company, long id) {
         getCompanyById(id);
         return companyRepository.update(company);
     }
 
-    public void deleteCompanyById(int id) {
+    public void deleteCompanyById(long id) {
         getCompanyById(id);
         companyRepository.delete(id);
     }
