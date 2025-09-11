@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class EmployeeRepository {
@@ -46,5 +47,11 @@ public class EmployeeRepository {
     public Employee delete(Employee employee) {
         employee.setStatus(false);
         return employee;
+    }
+
+    public List<Employee> queryByGender(String gender) {
+        return employees.stream()
+                .filter(employee -> employee.getGender().equalsIgnoreCase(gender))
+                .collect(Collectors.toList());
     }
 }

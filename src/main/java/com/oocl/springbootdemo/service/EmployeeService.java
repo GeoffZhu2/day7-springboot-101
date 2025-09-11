@@ -15,8 +15,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class EmployeeService { 
-    
+public class EmployeeService {
+
    @Autowired
    private EmployeeRepository employeeRepository;
 
@@ -43,9 +43,7 @@ public class EmployeeService {
         List<Employee> filteredEmployees = employees;
 
         if (gender != null) {
-            filteredEmployees = employees.stream()
-                    .filter(employee -> employee.getGender().equalsIgnoreCase(gender))
-                    .collect(Collectors.toList());
+            filteredEmployees = employeeRepository.queryByGender(gender);
         }
         int totalItems = filteredEmployees.size();
         int totalPages = (int) Math.ceil((double) totalItems / size);
@@ -72,10 +70,7 @@ public class EmployeeService {
     }
 
     public Employee updateEmployeeById(Employee employee, int id) {
-        Employee foundEmployee = employeeRepository.findById(id);
-        if (foundEmployee == null) {
-            throw new EmployeeNotFoundException();
-        }
+        Employee foundEmployee = getEmployeeById(id);
         if (!foundEmployee.isStatus()) {
             throw new UpdateLeftEmployeeException();
         }
@@ -83,10 +78,7 @@ public class EmployeeService {
     }
 
     public Employee deleteEmployeeById(int id) {
-        Employee foundEmployee = employeeRepository.findById(id);
-        if(foundEmployee == null) {
-            throw new EmployeeNotFoundException();
-        }
+        Employee foundEmployee = getEmployeeById(id);
         return employeeRepository.delete(foundEmployee);
     }
 
