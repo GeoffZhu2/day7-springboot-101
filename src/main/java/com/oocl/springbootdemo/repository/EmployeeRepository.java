@@ -1,6 +1,6 @@
 package com.oocl.springbootdemo.repository;
 
-import com.oocl.springbootdemo.Employee;
+import com.oocl.springbootdemo.entity.Employee;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

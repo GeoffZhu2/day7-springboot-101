@@ -1,6 +1,6 @@
 package com.oocl.springbootdemo.repository;
 
-import com.oocl.springbootdemo.Company;
+import com.oocl.springbootdemo.entity.Company;
 import com.oocl.springbootdemo.repository.dao.CompanyJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

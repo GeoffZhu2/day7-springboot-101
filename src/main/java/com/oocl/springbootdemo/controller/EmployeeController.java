@@ -1,6 +1,6 @@
 package com.oocl.springbootdemo.controller;
 
-import com.oocl.springbootdemo.Employee;
+import com.oocl.springbootdemo.entity.Employee;
 import com.oocl.springbootdemo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

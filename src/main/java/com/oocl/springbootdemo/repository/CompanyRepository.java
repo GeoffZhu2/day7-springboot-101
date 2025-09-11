@@ -1,6 +1,6 @@
 package com.oocl.springbootdemo.repository;
 
-import com.oocl.springbootdemo.Company;
+import com.oocl.springbootdemo.entity.Company;
 
 import java.util.List;
 

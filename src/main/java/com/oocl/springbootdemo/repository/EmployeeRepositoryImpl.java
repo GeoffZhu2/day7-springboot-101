@@ -1,6 +1,6 @@
 package com.oocl.springbootdemo.repository;
 
-import com.oocl.springbootdemo.Employee;
+import com.oocl.springbootdemo.entity.Employee;
 import com.oocl.springbootdemo.repository.dao.EmployeeJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

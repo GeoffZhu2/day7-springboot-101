@@ -1,6 +1,6 @@
 package com.oocl.springbootdemo.service;
 
-import com.oocl.springbootdemo.Company;
+import com.oocl.springbootdemo.entity.Company;
 import com.oocl.springbootdemo.exception.CompanyNotFoundException;
 import com.oocl.springbootdemo.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;

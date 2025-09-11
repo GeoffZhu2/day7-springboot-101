@@ -1,4 +1,4 @@
-package com.oocl.springbootdemo;
+package com.oocl.springbootdemo.entity;
 
 
 import jakarta.persistence.*;

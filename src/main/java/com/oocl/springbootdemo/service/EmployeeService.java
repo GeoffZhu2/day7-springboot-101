@@ -1,6 +1,6 @@
 package com.oocl.springbootdemo.service;
 
-import com.oocl.springbootdemo.Employee;
+import com.oocl.springbootdemo.entity.Employee;
 import com.oocl.springbootdemo.exception.EmployeeNotFoundException;
 import com.oocl.springbootdemo.exception.InvalidEmployeeAgeException;
 import com.oocl.springbootdemo.exception.SalaryNotPatchEmployeeAgeException;
