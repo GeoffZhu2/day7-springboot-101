@@ -42,18 +42,17 @@ public class EmployeeService {
 
     public Map<String, Object> getEmployees(String gender, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        Page<Employee> pageEmployees = employeeRepository.findWithPage(pageable);
-        List<Employee> employees = pageEmployees.getContent();
+        Page<Employee> employees;
         if (gender != null) {
-            employees = employees.stream()
-                    .filter(employee -> employee.getGender().equals(gender))
-                    .toList();
+            employees = employeeRepository.findWithGenderAndPage(gender, pageable);
+        } else {
+            employees = employeeRepository.findWithPage(pageable);
         }
 
-        int totalItems = employees.size();
-        int totalPages = (int) Math.ceil((double) totalItems / size);
+        int totalItems = (int) employees.getTotalElements();
+        int totalPages = employees.getTotalPages();
 
-        return getEmployeeResponse(employees, page, size, totalPages, totalItems);
+        return getEmployeeResponse(employees.getContent(), page, size, totalPages, totalItems);
     }
 
     private Map<String, Object> getEmployeeResponse(List<Employee> pagedEmployees, int page, int size, int totalPages, int totalItems) {

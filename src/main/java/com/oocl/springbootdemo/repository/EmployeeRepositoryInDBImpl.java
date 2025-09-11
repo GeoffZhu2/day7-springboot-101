@@ -43,4 +43,9 @@ public class EmployeeRepositoryInDBImpl implements EmployeeRepository {
     public Page<Employee> findWithPage(Pageable pageable) {
         return employeeJpaRepository.findAll(pageable);
     }
+
+    @Override
+    public Page<Employee> findWithGenderAndPage(String gender, Pageable pageable) {
+        return employeeJpaRepository.findAllByGender(gender, pageable);
+    }
 }

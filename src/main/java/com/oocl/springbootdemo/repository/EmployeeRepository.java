@@ -16,4 +16,6 @@ public interface EmployeeRepository {
     Employee delete(Employee employee);
 
     Page<Employee> findWithPage(Pageable pageable);
+
+    Page<Employee> findWithGenderAndPage(String gender, Pageable pageable);
 }
