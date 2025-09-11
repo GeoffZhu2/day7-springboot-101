@@ -1,5 +1,6 @@
 package com.oocl.springbootdemo.controller;
 
+import com.oocl.springbootdemo.dto.CompanyDto;
 import com.oocl.springbootdemo.entity.Company;
 import com.oocl.springbootdemo.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,8 @@ public class CompanyController {
     private CompanyService companyService;
 
     @PostMapping
-    public ResponseEntity<Company> createCompany(@RequestBody Company company) {
-        Company createdCompany = companyService.createCompany(company);
+    public ResponseEntity<Company> createCompany(@RequestBody CompanyDto companyDto) {
+        Company createdCompany = companyService.createCompany(companyDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCompany);
     }
 
@@ -37,8 +38,8 @@ public class CompanyController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Company> updateCompanyById(@RequestBody Company company, @PathVariable long id) {
-        Company updatedCompany = companyService.updateCompanyById(company, id);
+    public ResponseEntity<Company> updateCompanyById(@RequestBody CompanyDto companyDto, @PathVariable long id) {
+        Company updatedCompany = companyService.updateCompanyById(companyDto, id);
         return ResponseEntity.status(HttpStatus.OK).body(updatedCompany);
     }
 

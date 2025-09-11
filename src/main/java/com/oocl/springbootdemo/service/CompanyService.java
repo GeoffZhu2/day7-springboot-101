@@ -1,5 +1,6 @@
 package com.oocl.springbootdemo.service;
 
+import com.oocl.springbootdemo.dto.CompanyDto;
 import com.oocl.springbootdemo.entity.Company;
 import com.oocl.springbootdemo.exception.CompanyNotFoundException;
 import com.oocl.springbootdemo.repository.CompanyRepository;
@@ -16,7 +17,9 @@ public class CompanyService {
     @Autowired
     private CompanyRepository companyRepository;
 
-    public Company createCompany(Company company) {
+    public Company createCompany(CompanyDto companyDto) {
+        Company company = new Company();
+        company.setName(companyDto.getName());
         return companyRepository.create(company);
     }
 
@@ -58,8 +61,11 @@ public class CompanyService {
         return response;
     }
 
-    public Company updateCompanyById(Company company, long id) {
+    public Company updateCompanyById(CompanyDto companyDto, long id) {
         getCompanyById(id);
+        Company company = new Company();
+        company.setId(id);
+        company.setName(companyDto.getName());
         return companyRepository.update(company);
     }
 
