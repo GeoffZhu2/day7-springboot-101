@@ -2,9 +2,13 @@ package com.oocl.springbootdemo.service;
 
 import com.oocl.springbootdemo.dto.CompanyDto;
 import com.oocl.springbootdemo.entity.Company;
+import com.oocl.springbootdemo.entity.Employee;
 import com.oocl.springbootdemo.exception.CompanyNotFoundException;
 import com.oocl.springbootdemo.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -36,19 +40,13 @@ public class CompanyService {
     }
 
     public Map<String, Object> getCompanies(int page, int size) {
-        List<Company> companies = companyRepository.findAll();
-        int totalItems = companies.size();
-        int totalPages = (int) Math.ceil((double) totalItems / size);
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Company> companies = companyRepository.findWithPage(pageable);
 
-        int fromIndex = (page - 1) * size;
-        if (fromIndex > totalItems) {
-            return getCompanyResponse(companies, page, size, totalPages, totalItems);
-        }
-        int toIndex = Math.min(fromIndex + size, totalItems);
+        int totalItems = (int) companies.getTotalElements();
+        int totalPages = companies.getTotalPages();
 
-        List<Company> pagedCompanies = companies.subList(fromIndex, toIndex);
-
-        return getCompanyResponse(pagedCompanies, page, size, totalPages, totalItems);
+        return getCompanyResponse(companies.getContent(), page, size, totalPages, totalItems);
     }
 
     private Map<String, Object> getCompanyResponse(List<Company> companies, int page, int size, int totalPages, int totalItems) {

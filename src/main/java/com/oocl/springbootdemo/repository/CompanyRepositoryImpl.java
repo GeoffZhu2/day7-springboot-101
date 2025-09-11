@@ -3,6 +3,8 @@ package com.oocl.springbootdemo.repository;
 import com.oocl.springbootdemo.entity.Company;
 import com.oocl.springbootdemo.repository.dao.CompanyJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -35,5 +37,10 @@ public class CompanyRepositoryImpl implements CompanyRepository {
 
     public void delete(long id) {
         companyJpaRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<Company> findWithPage(Pageable pageable) {
+        return companyJpaRepository.findAll(pageable);
     }
 }
