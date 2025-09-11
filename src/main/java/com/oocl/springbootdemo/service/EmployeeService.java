@@ -9,6 +9,7 @@ import com.oocl.springbootdemo.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class EmployeeService {
         return employeeRepository.create(employee);
     }
 
-    public Employee getEmployeeById(int id) {
+    public Employee getEmployeeById(long id) {
         Employee foundEmployee = employeeRepository.findById(id);
         if (foundEmployee == null) {
             throw new EmployeeNotFoundException();
@@ -39,12 +40,10 @@ public class EmployeeService {
 
     public Map<String, Object> getEmployees(String gender, int page, int size) {
         List<Employee> employees = employeeRepository.findAll();
-        List<Employee> filteredEmployees = employees;
-
         if (gender != null) {
-            filteredEmployees = employeeRepository.queryByGender(gender);
+            employees = employeeRepository.queryByGender(gender);
         }
-        int totalItems = filteredEmployees.size();
+        int totalItems = employees.size();
         int totalPages = (int) Math.ceil((double) totalItems / size);
 
         int fromIndex = (page - 1) * size;
@@ -53,7 +52,7 @@ public class EmployeeService {
         }
         int toIndex = Math.min(fromIndex + size, totalItems);
 
-        List<Employee> pagedEmployees = filteredEmployees.subList(fromIndex, toIndex);
+        List<Employee> pagedEmployees = employees.subList(fromIndex, toIndex);
 
         return getEmployeeResponse(pagedEmployees, page, size, totalPages, totalItems);
     }
@@ -68,7 +67,7 @@ public class EmployeeService {
         return response;
     }
 
-    public Employee updateEmployeeById(Employee employee, int id) {
+    public Employee updateEmployeeById(Employee employee, long id) {
         Employee foundEmployee = getEmployeeById(id);
         if (!foundEmployee.isStatus()) {
             throw new UpdateLeftEmployeeException();
@@ -76,7 +75,7 @@ public class EmployeeService {
         return employeeRepository.update(employee);
     }
 
-    public Employee deleteEmployeeById(int id) {
+    public Employee deleteEmployeeById(long id) {
         Employee foundEmployee = getEmployeeById(id);
         return employeeRepository.delete(foundEmployee);
     }

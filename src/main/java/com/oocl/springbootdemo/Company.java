@@ -1,9 +1,15 @@
 package com.oocl.springbootdemo;
 
 
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 
+@Entity
+@Table(name = "company")
 public class Company implements Serializable {
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
     private String name;
 

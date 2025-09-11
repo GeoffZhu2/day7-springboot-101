@@ -1,15 +1,33 @@
 package com.oocl.springbootdemo;
 
 
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 
+@Entity
+@Table(name = "employee")
 public class Employee implements Serializable {
-    private int id;
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private long id;
     private String name;
     private String gender;
     private int age;
     private double salary;
     private boolean status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
 
     public boolean isStatus() {
         return status;
@@ -35,11 +53,11 @@ public class Employee implements Serializable {
         this.salary = salary;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

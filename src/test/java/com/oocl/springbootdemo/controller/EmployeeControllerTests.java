@@ -1,5 +1,6 @@
 package com.oocl.springbootdemo.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oocl.springbootdemo.service.EmployeeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,7 +46,6 @@ class EmployeeControllerTests {
         mockMvc.perform(post("/employees").contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("John Smith"))
                 .andExpect(jsonPath("$.age").value(35))
                 .andExpect(jsonPath("$.gender").value("Male"))
@@ -98,14 +100,11 @@ class EmployeeControllerTests {
                     "salary": 25000
                 }
                 """;
-        mockMvc.perform(post("/employees")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
-                .andReturn();
+        long id = createEmployee(requestBody);
 
-        mockMvc.perform(get("/employees/1"))
+        mockMvc.perform(get("/employees/{id}", id))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value("John Smith"))
                 .andExpect(jsonPath("$.age").value(35))
                 .andExpect(jsonPath("$.gender").value("Male"))
@@ -132,19 +131,13 @@ class EmployeeControllerTests {
                     "salary": 22000
                 }
                 """;
-        mockMvc.perform(post("/employees")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody1))
-                .andReturn();
-        mockMvc.perform(post("/employees")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody2))
-                .andReturn();
+        long id1 = createEmployee(requestBody1);
+        long id2 = createEmployee(requestBody2);
 
         mockMvc.perform(get("/employees?gender=Male"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", hasSize(1)))
-                .andExpect(jsonPath("$.content[0].id").value(1))
+                .andExpect(jsonPath("$.content[0].id").value(id1))
                 .andExpect(jsonPath("$.content[0].name").value("John Smith"))
                 .andExpect(jsonPath("$.content[0].age").value(35))
                 .andExpect(jsonPath("$.content[0].gender").value("Male"))
@@ -157,12 +150,12 @@ class EmployeeControllerTests {
         mockMvc.perform(get("/employees"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", hasSize(2)))
-                .andExpect(jsonPath("$.content[0].id").value(1))
+                .andExpect(jsonPath("$.content[0].id").value(id1))
                 .andExpect(jsonPath("$.content[0].name").value("John Smith"))
                 .andExpect(jsonPath("$.content[0].age").value(35))
                 .andExpect(jsonPath("$.content[0].gender").value("Male"))
                 .andExpect(jsonPath("$.content[0].salary").value(30000))
-                .andExpect(jsonPath("$.content[1].id").value(2))
+                .andExpect(jsonPath("$.content[1].id").value(id2))
                 .andExpect(jsonPath("$.content[1].name").value("Tom Cat"))
                 .andExpect(jsonPath("$.content[1].age").value(40))
                 .andExpect(jsonPath("$.content[1].gender").value("Female"))
@@ -208,26 +201,22 @@ class EmployeeControllerTests {
                     "status": true
                 }
                 """;
-        String updateRequestBody = """
+        long id = createEmployee(createRequestBody);
+        String updateRequestBody = String.format("""
                 {
-                    "id": 1,
+                    "id": %s,
                     "name": "Tom Cat",
                     "age": 40,
                     "gender": "Female",
                     "salary": 30000,
                     "status": true
                 }
-                """;
-        mockMvc.perform(post("/employees")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(createRequestBody))
-                .andReturn();
-
-        mockMvc.perform(put("/employees/1")
+                """, id);
+        mockMvc.perform(put("/employees/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updateRequestBody))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value("Tom Cat"))
                 .andExpect(jsonPath("$.age").value(40))
                 .andExpect(jsonPath("$.gender").value("Female"))
@@ -254,15 +243,12 @@ class EmployeeControllerTests {
                     "status": false
                 }
                 """;
-        mockMvc.perform(post("/employees")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(createRequestBody))
-                .andReturn();
-        mockMvc.perform(delete("/employees/1"))
+        long id = createEmployee(createRequestBody);
+        mockMvc.perform(delete("/employees/{id}", id))
                 .andExpect(status().isNoContent())
                 .andReturn();
 
-        mockMvc.perform(put("/employees/1")
+        mockMvc.perform(put("/employees/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updateRequestBody))
                 .andExpect(status().isBadRequest())
@@ -271,7 +257,7 @@ class EmployeeControllerTests {
 
     @Test
     void should_delete_employee_by_id_when_delete_given_a_valid_body() throws Exception {
-        String requestBody1 = """
+        String requestBody = """
                 {
                     "name": "John Smith",
                     "age": 35,
@@ -279,15 +265,12 @@ class EmployeeControllerTests {
                     "salary": 35000
                 }
                 """;
-        mockMvc.perform(post("/employees")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody1))
-                .andReturn();
+        long id = createEmployee(requestBody);
 
         mockMvc.perform(delete("/employees/2"))
                 .andExpect(status().isNotFound())
                 .andReturn();
-        mockMvc.perform(delete("/employees/1"))
+        mockMvc.perform(delete("/employees/{id}", id))
                 .andExpect(status().isNoContent())
                 .andReturn();
     }
@@ -333,5 +316,13 @@ class EmployeeControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentPage").value(1))
                 .andExpect(jsonPath("$.pageSize").value(5));
+    }
+    private long createEmployee(String requestBody) throws Exception {
+        ResultActions resultActions = mockMvc.perform(post("/employees")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody));
+        MvcResult mvcResult = resultActions.andReturn();
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+        return new ObjectMapper().readTree(contentAsString).get("id").asLong();
     }
 }
