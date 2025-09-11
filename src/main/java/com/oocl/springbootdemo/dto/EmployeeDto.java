@@ -14,4 +14,5 @@ public class EmployeeDto {
     private String gender;
     private int age;
     private double salary;
+    private Long companyId;
 }

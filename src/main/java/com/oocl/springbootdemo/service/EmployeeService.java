@@ -92,6 +92,7 @@ public class EmployeeService {
         employee.setGender(employeeDto.getGender());
         employee.setAge(employeeDto.getAge());
         employee.setSalary(employeeDto.getSalary());
+        employee.setCompanyId(employeeDto.getCompanyId());
         return employee;
     }
 }

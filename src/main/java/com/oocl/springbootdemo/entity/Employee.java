@@ -22,4 +22,7 @@ public class Employee implements Serializable {
     private int age;
     private double salary;
     private Boolean status = true;
+
+    @Column(name = "company_id")
+    private Long companyId;
 }
