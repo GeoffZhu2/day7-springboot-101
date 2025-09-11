@@ -78,21 +78,27 @@ class CompanyControllerTests {
                 }
                 """;
         long id = createCompany(createRequestBody);
-        String updateRequestBody = String.format("""
+        String validUpdate = String.format("""
                 {
                     "id": %s,
                     "name": "C++"
                 }
                 """, id);
-        mockMvc.perform(put("/companies/{id}", id)
+        String invalidUpdate = """
+                {
+                    "id": 9999,
+                    "name": "C++"
+                }
+                """;
+        mockMvc.perform(put("/companies")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(updateRequestBody))
+                        .content(validUpdate))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value("C++"));
-        mockMvc.perform(put("/companies/9999")
+        mockMvc.perform(put("/companies")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(updateRequestBody))
+                        .content(invalidUpdate))
                 .andExpect(status().isNotFound());
     }
 

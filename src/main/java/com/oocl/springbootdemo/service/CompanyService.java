@@ -61,10 +61,10 @@ public class CompanyService {
         return response;
     }
 
-    public Company updateCompanyById(CompanyDto companyDto, long id) {
-        getCompanyById(id);
+    public Company updateCompanyById(CompanyDto companyDto) {
+        getCompanyById(companyDto.getId());
         Company company = new Company();
-        company.setId(id);
+        company.setId(companyDto.getId());
         company.setName(companyDto.getName());
         return companyRepository.update(company);
     }
