@@ -12,19 +12,18 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService {
 
-   @Autowired
-   private EmployeeRepository employeeRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     public Employee createEmployee(Employee employee) {
-        if(employee.getAge() < 18 || employee.getAge() > 65) {
+        if (employee.getAge() < 18 || employee.getAge() > 65) {
             throw new InvalidEmployeeAgeException();
         }
-        if(employee.getAge() >= 30 && employee.getSalary() < 20000) {
+        if (employee.getAge() >= 30 && employee.getSalary() < 20000) {
             throw new SalaryNotPatchEmployeeAgeException();
         }
         return employeeRepository.create(employee);
@@ -32,7 +31,7 @@ public class EmployeeService {
 
     public Employee getEmployeeById(int id) {
         Employee foundEmployee = employeeRepository.findById(id);
-        if(foundEmployee == null) {
+        if (foundEmployee == null) {
             throw new EmployeeNotFoundException();
         }
         return foundEmployee;

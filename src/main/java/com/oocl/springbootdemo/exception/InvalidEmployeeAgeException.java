@@ -1,4 +1,4 @@
 package com.oocl.springbootdemo.exception;
 
-public class InvalidEmployeeAgeException extends RuntimeException{
+public class InvalidEmployeeAgeException extends RuntimeException {
 }

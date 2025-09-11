@@ -1,15 +1,13 @@
 package com.oocl.springbootdemo.controller;
 
 import com.oocl.springbootdemo.Employee;
-import com.oocl.springbootdemo.exception.InvalidEmployeeAgeException;
-import com.oocl.springbootdemo.exception.EmployeeNotFoundException;
 import com.oocl.springbootdemo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/employees")
@@ -44,6 +42,7 @@ public class EmployeeController {
         Employee updatedEmployee = employeeService.updateEmployeeById(employee, id);
         return ResponseEntity.status(HttpStatus.OK).body(updatedEmployee);
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Employee> deleteEmployeeById(@PathVariable int id) {
         employeeService.deleteEmployeeById(id);

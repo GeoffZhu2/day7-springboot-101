@@ -31,6 +31,7 @@ public class GlobalExceptionHandler {
     public String handleSalaryNotPatchEmployeeAgeException(Exception e) {
         return e.getMessage();
     }
+
     @ExceptionHandler(UpdateLeftEmployeeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleUpdateHasLeftEmployeeException(Exception e) {

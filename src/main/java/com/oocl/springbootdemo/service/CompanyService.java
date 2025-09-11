@@ -1,9 +1,7 @@
 package com.oocl.springbootdemo.service;
 
 import com.oocl.springbootdemo.Company;
-import com.oocl.springbootdemo.Employee;
 import com.oocl.springbootdemo.exception.CompanyNotFoundException;
-import com.oocl.springbootdemo.exception.UpdateLeftEmployeeException;
 import com.oocl.springbootdemo.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +26,7 @@ public class CompanyService {
 
     public Company getCompanyById(int id) {
         Company foundCompany = companyRepository.findById(id);
-        if(foundCompany == null) {
+        if (foundCompany == null) {
             throw new CompanyNotFoundException();
         }
         return foundCompany;
