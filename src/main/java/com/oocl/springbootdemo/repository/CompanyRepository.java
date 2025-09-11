@@ -1,43 +1,20 @@
 package com.oocl.springbootdemo.repository;
 
 import com.oocl.springbootdemo.Company;
-import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Repository
-public class CompanyRepository {
-    private final List<Company> companies = new ArrayList<>();
-    private static int companyId = 0;
+public interface CompanyRepository {
 
-    public Company create(Company company) {
-        company.setId(++companyId);
-        companies.add(company);
-        return company;
-    }
+    Company create(Company company);
 
-    public void clearAll() {
-        companies.clear();
-        companyId = 0;
-    }
+    void clearAll();
 
-    public Company findById(int id) {
-        return companies.stream().filter(company -> company.getId() == id)
-                .findFirst()
-                .orElse(null);
-    }
+    Company findById(int id);
 
-    public List<Company> findAll() {
-        return companies;
-    }
+    List<Company> findAll();
 
-    public Company update(Company company) {
-        company.setName(company.getName());
-        return company;
-    }
+    Company update(Company company);
 
-    public void delete(int id) {
-        companies.removeIf(findCompany -> findCompany.getId() == id);
-    }
+    void delete(int id);
 }
