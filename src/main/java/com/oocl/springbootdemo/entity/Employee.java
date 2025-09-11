@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.io.Serializable;
 
@@ -21,5 +22,5 @@ public class Employee implements Serializable {
     private String gender;
     private int age;
     private double salary;
-    private boolean status;
+    private Boolean status = true;
 }

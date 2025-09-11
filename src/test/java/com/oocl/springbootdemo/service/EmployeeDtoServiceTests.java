@@ -1,5 +1,6 @@
 package com.oocl.springbootdemo.service;
 
+import com.oocl.springbootdemo.dto.EmployeeDto;
 import com.oocl.springbootdemo.entity.Employee;
 import com.oocl.springbootdemo.exception.EmployeeNotFoundException;
 import com.oocl.springbootdemo.exception.InvalidEmployeeAgeException;
@@ -14,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-public class EmployeeServiceTests {
+public class EmployeeDtoServiceTests {
     @Mock
     private EmployeeRepository employeeRepository;
 
@@ -23,28 +24,28 @@ public class EmployeeServiceTests {
 
     @Test
     public void should_not_create_employee_employee_given_invalid_age() {
-        Employee employee1 = new Employee();
-        employee1.setId(1);
-        employee1.setAge(17);
-        employee1.setSalary(25000);
-        Employee employee2 = new Employee();
-        employee1.setId(2);
-        employee1.setAge(66);
-        employee1.setSalary(25000);
-        assertThrows(InvalidEmployeeAgeException.class, () -> employeeService.createEmployee(employee1));
-        assertThrows(InvalidEmployeeAgeException.class, () -> employeeService.createEmployee(employee2));
+        EmployeeDto employeeDto1 = new EmployeeDto();
+        employeeDto1.setId(1);
+        employeeDto1.setAge(17);
+        employeeDto1.setSalary(25000);
+        EmployeeDto employeeDto2 = new EmployeeDto();
+        employeeDto1.setId(2);
+        employeeDto1.setAge(66);
+        employeeDto1.setSalary(25000);
+        assertThrows(InvalidEmployeeAgeException.class, () -> employeeService.createEmployee(employeeDto1));
+        assertThrows(InvalidEmployeeAgeException.class, () -> employeeService.createEmployee(employeeDto2));
     }
 
     @Test
     public void should_not_create_employee_given_age_over_30_and_salary_below_20000() {
-        Employee employee = new Employee();
-        employee.setId(1);
-        employee.setName("Tom");
-        employee.setAge(31);
-        employee.setGender("Male");
-        employee.setSalary(2222);
+        EmployeeDto employeeDto = new EmployeeDto();
+        employeeDto.setId(1);
+        employeeDto.setName("Tom");
+        employeeDto.setAge(31);
+        employeeDto.setGender("Male");
+        employeeDto.setSalary(2222);
 
-        assertThrows(SalaryNotPatchEmployeeAgeException.class, () -> employeeService.createEmployee(employee));
+        assertThrows(SalaryNotPatchEmployeeAgeException.class, () -> employeeService.createEmployee(employeeDto));
     }
 
     @Test
@@ -55,16 +56,15 @@ public class EmployeeServiceTests {
         expectEmployee.setAge(31);
         expectEmployee.setGender("Male");
         expectEmployee.setSalary(35000);
-        expectEmployee.setStatus(true);
 
-        Employee employee = new Employee();
-        employee.setName("Tom");
-        employee.setAge(31);
-        employee.setGender("Male");
-        employee.setSalary(35000);
-        when(employeeRepository.create(employee)).thenReturn(expectEmployee);
-        Employee foundEmployee = employeeService.createEmployee(employee);
-        assertTrue(foundEmployee.isStatus());
+        EmployeeDto employeeDto = new EmployeeDto();
+        employeeDto.setName("Tom");
+        employeeDto.setAge(31);
+        employeeDto.setGender("Male");
+        employeeDto.setSalary(35000);
+        when(employeeRepository.create(any(Employee.class))).thenReturn(expectEmployee);
+        Employee foundEmployee = employeeService.createEmployee(employeeDto);
+        assertTrue(foundEmployee.getStatus());
     }
 
     @Test
@@ -117,7 +117,7 @@ public class EmployeeServiceTests {
         when(employeeRepository.delete(beforeDeleteEmployee)).thenReturn(afterDeleteEmployee);
         when(employeeRepository.findById(1)).thenReturn(beforeDeleteEmployee);
         Employee deleteEmployee = employeeService.deleteEmployeeById(1);
-        assertFalse(deleteEmployee.isStatus());
+        assertFalse(deleteEmployee.getStatus());
         verify(employeeRepository, times(1)).delete(beforeDeleteEmployee);
     }
 }

@@ -14,7 +14,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 
     @Override
     public Employee create(Employee employee) {
-        employee.setStatus(true);
+        
         return employeeJpaRepository.save(employee);
     }
 

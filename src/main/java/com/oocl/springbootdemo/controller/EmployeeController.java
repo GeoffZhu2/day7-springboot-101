@@ -1,5 +1,6 @@
 package com.oocl.springbootdemo.controller;
 
+import com.oocl.springbootdemo.dto.EmployeeDto;
 import com.oocl.springbootdemo.entity.Employee;
 import com.oocl.springbootdemo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,8 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @PostMapping
-    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
-        Employee createdEmployee = employeeService.createEmployee(employee);
+    public ResponseEntity<Employee> createEmployee(@RequestBody EmployeeDto employeeDto) {
+        Employee createdEmployee = employeeService.createEmployee(employeeDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
     }
 
@@ -38,8 +39,8 @@ public class EmployeeController {
     }
 
     @PutMapping
-    public ResponseEntity<Employee> updateEmployeeById(@RequestBody Employee employee) {
-        Employee updatedEmployee = employeeService.updateEmployeeById(employee);
+    public ResponseEntity<Employee> updateEmployeeById(@RequestBody EmployeeDto employeeDto) {
+        Employee updatedEmployee = employeeService.updateEmployeeById(employeeDto);
         return ResponseEntity.status(HttpStatus.OK).body(updatedEmployee);
     }
 

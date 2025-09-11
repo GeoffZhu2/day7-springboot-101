@@ -1,5 +1,6 @@
 package com.oocl.springbootdemo.service;
 
+import com.oocl.springbootdemo.dto.EmployeeDto;
 import com.oocl.springbootdemo.entity.Employee;
 import com.oocl.springbootdemo.exception.EmployeeNotFoundException;
 import com.oocl.springbootdemo.exception.InvalidEmployeeAgeException;
@@ -22,13 +23,14 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    public Employee createEmployee(Employee employee) {
-        if (employee.getAge() < 18 || employee.getAge() > 65) {
+    public Employee createEmployee(EmployeeDto employeeDto) {
+        if (employeeDto.getAge() < 18 || employeeDto.getAge() > 65) {
             throw new InvalidEmployeeAgeException();
         }
-        if (employee.getAge() >= 30 && employee.getSalary() < 20000) {
+        if (employeeDto.getAge() >= 30 && employeeDto.getSalary() < 20000) {
             throw new SalaryNotPatchEmployeeAgeException();
         }
+        Employee employee = employeeDtoMapping(employeeDto);
         return employeeRepository.create(employee);
     }
 
@@ -55,9 +57,9 @@ public class EmployeeService {
         return getEmployeeResponse(employees.getContent(), page, size, totalPages, totalItems);
     }
 
-    private Map<String, Object> getEmployeeResponse(List<Employee> pagedEmployees, int page, int size, int totalPages, int totalItems) {
+    private Map<String, Object> getEmployeeResponse(List<Employee> pagedEmployeeDtos, int page, int size, int totalPages, int totalItems) {
         Map<String, Object> response = new HashMap<>();
-        response.put("content", pagedEmployees);
+        response.put("content", pagedEmployeeDtos);
         response.put("totalPages", totalPages);
         response.put("totalItems", totalItems);
         response.put("currentPage", page);
@@ -65,11 +67,13 @@ public class EmployeeService {
         return response;
     }
 
-    public Employee updateEmployeeById(Employee employee) {
-        Employee foundEmployee = getEmployeeById(employee.getId());
-        if (!foundEmployee.isStatus()) {
+    public Employee updateEmployeeById(EmployeeDto employeeDto) {
+        Employee foundEmployee = getEmployeeById(employeeDto.getId());
+        if (!foundEmployee.getStatus()) {
             throw new UpdateLeftEmployeeException();
         }
+        Employee employee = employeeDtoMapping(employeeDto);
+        employee.setId(foundEmployee.getId());
         return employeeRepository.update(employee);
     }
 
@@ -80,5 +84,14 @@ public class EmployeeService {
 
     public void clearEmployees() {
         employeeRepository.clearAll();
+    }
+
+    private Employee employeeDtoMapping(EmployeeDto employeeDto) {
+        Employee employee = new Employee();
+        employee.setName(employeeDto.getName());
+        employee.setGender(employeeDto.getGender());
+        employee.setAge(employeeDto.getAge());
+        employee.setSalary(employeeDto.getSalary());
+        return employee;
     }
 }
