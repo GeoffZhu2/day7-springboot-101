@@ -74,6 +74,7 @@ class CompanyControllerTests {
                 """;
         String updateRequestBody = """
                 {
+                    "id": 1,
                     "name": "C++"
                 }
                 """;
@@ -107,7 +108,7 @@ class CompanyControllerTests {
                 .andReturn();
 
         mockMvc.perform(delete("/companies/2"))
-                .andExpect(status().isNoContent())
+                .andExpect(status().isNotFound())
                 .andReturn();
         mockMvc.perform(delete("/companies/1"))
                 .andExpect(status().isNoContent())

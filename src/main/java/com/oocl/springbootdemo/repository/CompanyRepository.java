@@ -23,24 +23,19 @@ public class CompanyRepository {
         companyId = 0;
     }
 
-    public Optional<Company> findById(int id) {
-        return companies.stream()
-                .filter(c -> c.getId() == id)
-                .findFirst();
+    public Company findById(int id) {
+        return companies.stream().filter(company -> company.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 
     public List<Company> findAll() {
         return companies;
     }
 
-    public Company update(Company company, int id) {
-        Optional<Company> companyOptional = findById(id);
-        if(companyOptional.isPresent()) {
-            Company updatedCompany = companyOptional.get();
-            updatedCompany.setName(company.getName());
-            return updatedCompany;
-        }
-        return null;
+    public Company update(Company company) {
+        company.setName(company.getName());
+        return company;
     }
 
     public void delete(int id) {

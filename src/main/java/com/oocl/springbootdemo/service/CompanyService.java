@@ -1,6 +1,9 @@
 package com.oocl.springbootdemo.service;
 
 import com.oocl.springbootdemo.Company;
+import com.oocl.springbootdemo.Employee;
+import com.oocl.springbootdemo.exception.CompanyNotFoundException;
+import com.oocl.springbootdemo.exception.UpdateLeftEmployeeException;
 import com.oocl.springbootdemo.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class CompanyService {
@@ -25,8 +27,11 @@ public class CompanyService {
     }
 
     public Company getCompanyById(int id) {
-        Optional<Company> companyOptional = companyRepository.findById(id);
-        return companyOptional.orElse(null);
+        Company foundCompany = companyRepository.findById(id);
+        if(foundCompany == null) {
+            throw new CompanyNotFoundException();
+        }
+        return foundCompany;
     }
 
     public Map<String, Object> getCompanies(int page, int size) {
@@ -56,10 +61,12 @@ public class CompanyService {
     }
 
     public Company updateCompanyById(Company company, int id) {
-        return companyRepository.update(company, id);
+        getCompanyById(id);
+        return companyRepository.update(company);
     }
 
     public void deleteCompanyById(int id) {
+        getCompanyById(id);
         companyRepository.delete(id);
     }
 }

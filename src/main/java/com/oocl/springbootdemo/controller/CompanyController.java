@@ -25,10 +25,7 @@ public class CompanyController {
     @GetMapping("/{id}")
     public ResponseEntity<Company> getCompanyById(@PathVariable int id) {
         Company company = companyService.getCompanyById(id);
-        if (company != null) {
-            return ResponseEntity.ok(company);
-        }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.OK).body(company);
     }
 
     @GetMapping
@@ -42,10 +39,7 @@ public class CompanyController {
     @PutMapping("/{id}")
     public ResponseEntity<Company> updateCompanyById(@RequestBody Company company, @PathVariable int id) {
         Company updatedCompany = companyService.updateCompanyById(company, id);
-        if (updatedCompany != null) {
-            return ResponseEntity.ok(updatedCompany);
-        }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.OK).body(updatedCompany);
     }
 
     @DeleteMapping("/{id}")
