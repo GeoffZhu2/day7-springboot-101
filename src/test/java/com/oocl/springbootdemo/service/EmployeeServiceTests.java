@@ -4,7 +4,7 @@ import com.oocl.springbootdemo.Employee;
 import com.oocl.springbootdemo.exception.EmployeeNotFoundException;
 import com.oocl.springbootdemo.exception.InvalidEmployeeAgeException;
 import com.oocl.springbootdemo.exception.SalaryNotPatchEmployeeAgeException;
-import com.oocl.springbootdemo.repository.EmployeeRepositoryInMemoryImpl;
+import com.oocl.springbootdemo.repository.EmployeeRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 public class EmployeeServiceTests {
     @Mock
-    private EmployeeRepositoryInMemoryImpl employeeRepository;
+    private EmployeeRepository employeeRepository;
 
     @InjectMocks
     private EmployeeService employeeService;

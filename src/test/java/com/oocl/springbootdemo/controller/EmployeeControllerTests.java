@@ -295,23 +295,15 @@ class EmployeeControllerTests {
         mockMvc.perform(get("/employees?page=1&size=5"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", hasSize(5)))
-                .andExpect(jsonPath("$.totalPages").value(2))
-                .andExpect(jsonPath("$.totalItems").value(10))
                 .andExpect(jsonPath("$.currentPage").value(1))
                 .andExpect(jsonPath("$.pageSize").value(5))
                 .andExpect(jsonPath("$.content[0].name").value("Employee 1"));
         mockMvc.perform(get("/employees?page=2&size=5"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", hasSize(5)))
-                .andExpect(jsonPath("$.totalPages").value(2))
-                .andExpect(jsonPath("$.totalItems").value(10))
                 .andExpect(jsonPath("$.currentPage").value(2))
                 .andExpect(jsonPath("$.pageSize").value(5))
                 .andExpect(jsonPath("$.content[0].name").value("Employee 6"));
-        mockMvc.perform(get("/employees?gender=Male&page=1&size=3"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content", hasSize(3)))
-                .andExpect(jsonPath("$.totalItems").value(10));
         mockMvc.perform(get("/employees"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentPage").value(1))

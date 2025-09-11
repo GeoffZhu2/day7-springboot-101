@@ -3,11 +3,9 @@ package com.oocl.springbootdemo.repository;
 import com.oocl.springbootdemo.Employee;
 import com.oocl.springbootdemo.repository.dao.EmployeeJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Repository
 public class EmployeeRepositoryInDBImpl implements EmployeeRepository {
@@ -31,11 +29,6 @@ public class EmployeeRepositoryInDBImpl implements EmployeeRepository {
     }
 
     @Override
-    public List<Employee> findAll() {
-        return employeeJpaRepository.findAll();
-    }
-
-    @Override
     public Employee update(Employee employee) {
         return employeeJpaRepository.save(employee);
     }
@@ -47,7 +40,7 @@ public class EmployeeRepositoryInDBImpl implements EmployeeRepository {
     }
 
     @Override
-    public List<Employee> queryByGender(String gender) {
-        return employeeJpaRepository.findByGender(gender);
+    public Page<Employee> findWithPage(Pageable pageable) {
+        return employeeJpaRepository.findAll(pageable);
     }
 }

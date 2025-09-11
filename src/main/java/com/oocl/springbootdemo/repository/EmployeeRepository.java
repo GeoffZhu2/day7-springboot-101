@@ -1,8 +1,8 @@
 package com.oocl.springbootdemo.repository;
 
 import com.oocl.springbootdemo.Employee;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface EmployeeRepository {
     Employee create(Employee employee);
@@ -11,11 +11,9 @@ public interface EmployeeRepository {
 
     Employee findById(long id);
 
-    List<Employee> findAll();
-
     Employee update(Employee employee);
 
     Employee delete(Employee employee);
 
-    List<Employee> queryByGender(String gender);
+    Page<Employee> findWithPage(Pageable pageable);
 }

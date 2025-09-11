@@ -7,9 +7,11 @@ import com.oocl.springbootdemo.exception.SalaryNotPatchEmployeeAgeException;
 import com.oocl.springbootdemo.exception.UpdateLeftEmployeeException;
 import com.oocl.springbootdemo.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,22 +41,19 @@ public class EmployeeService {
     }
 
     public Map<String, Object> getEmployees(String gender, int page, int size) {
-        List<Employee> employees = employeeRepository.findAll();
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Employee> pageEmployees = employeeRepository.findWithPage(pageable);
+        List<Employee> employees = pageEmployees.getContent();
         if (gender != null) {
-            employees = employeeRepository.queryByGender(gender);
+            employees = employees.stream()
+                    .filter(employee -> employee.getGender().equals(gender))
+                    .toList();
         }
+
         int totalItems = employees.size();
         int totalPages = (int) Math.ceil((double) totalItems / size);
 
-        int fromIndex = (page - 1) * size;
-        if (fromIndex > totalItems) {
-            return getEmployeeResponse(employees, page, size, totalPages, totalItems);
-        }
-        int toIndex = Math.min(fromIndex + size, totalItems);
-
-        List<Employee> pagedEmployees = employees.subList(fromIndex, toIndex);
-
-        return getEmployeeResponse(pagedEmployees, page, size, totalPages, totalItems);
+        return getEmployeeResponse(employees, page, size, totalPages, totalItems);
     }
 
     private Map<String, Object> getEmployeeResponse(List<Employee> pagedEmployees, int page, int size, int totalPages, int totalItems) {
