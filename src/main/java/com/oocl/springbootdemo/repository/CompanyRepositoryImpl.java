@@ -7,8 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public class CompanyRepositoryImpl implements CompanyRepository {
     @Autowired
@@ -25,10 +23,6 @@ public class CompanyRepositoryImpl implements CompanyRepository {
     public Company findById(long id) {
         return companyJpaRepository.findById(id)
                 .orElse(null);
-    }
-
-    public List<Company> findAll() {
-        return companyJpaRepository.findAll();
     }
 
     public Company update(Company company) {
