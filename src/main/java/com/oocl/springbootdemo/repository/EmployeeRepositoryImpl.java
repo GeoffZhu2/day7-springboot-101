@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class EmployeeRepositoryInDBImpl implements EmployeeRepository {
+public class EmployeeRepositoryImpl implements EmployeeRepository {
     @Autowired
     private EmployeeJpaRepository employeeJpaRepository;
 
